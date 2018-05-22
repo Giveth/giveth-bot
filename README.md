@@ -24,4 +24,4 @@ Invite your bot to a room and use one of the folowing commands:
 * `!help` for more information.
 * `!sheet` to see the current [rewardDAO](https://medium.com/giveth/how-rewarddao-works-aka-what-are-points-7388f70269a) sheet
 
-Pull requests welcome!
+Pull requests are welcome!

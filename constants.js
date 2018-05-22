@@ -3,10 +3,15 @@
 // ]
 
 // Allowed point types
-module.exports.typeList = [
-  'gov',
-  'dapp',
-  'sc',
-  'comm',
-  'unicorn',
-]
+module.exports.point_types = [
+	"GOV",
+	"DAPP",
+	"SC",
+	"COMM",
+	"UNICORN",
+];
+
+module.exports.domains = [
+	"matrix.org",
+	"status.im",
+];
