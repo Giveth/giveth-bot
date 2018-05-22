@@ -82,7 +82,7 @@ function authenticated(auth) {
       if (err) {
         console.log("Error:", err);
       }
-  
+
       console.log(`Logged in ${data.user_id} on device ${data.device_id}`);
       const client = sdk.createClient({
         baseUrl: "https://matrix.org",
@@ -90,58 +90,61 @@ function authenticated(auth) {
         userId: data.user_id,
         deviceId: data.device_id
       });
-  
+
       client.on("Room.timeline", (event, room, toStartOfTimeline) => {
         if (event.getType() === "m.room.message" && toStartOfTimeline === false) {
           client.setPresence("online");
-          const sender = event.getSender();
           const message = event.getContent().body;
           const roomId = room.roomId;
-          // const userAllowed = userList.filter(user => user === sender).length;
-          const splittedMsg = message.split(" ");
-          
-          const hasHelp = splittedMsg[0] === "!help";
-          const hasSheet = splittedMsg[0] === "!sheet";
-          const hasDish = splittedMsg[0] === "!dish";
-          const hasNumber = parseInt(splittedMsg[1]);
-          const hasType = splittedMsg[2] && typeList.filter((type) => type === splittedMsg[2].toLocaleLowerCase()).length
-          const hasPointsToFor = splittedMsg[3] === "points" && splittedMsg[4] === "to" && splittedMsg[6] === "for"
-  
-          if (hasDish && hasNumber && hasType && hasPointsToFor) {
-            const amount = BigNumber(splittedMsg[1]).toFormat(2);
-            const type = splittedMsg[2].toUpperCase();
-            const receiver = splittedMsg[5];
-            const reason = "For" + message.split("for")[1];
-            const date = dayjs().format("DD-MMM-YYYY");
-            const link = `https://riot.im/app/#/room/${roomId}/${event.getId()}`;
-
-            const sheets = google.sheets({version: 'v4', auth});
-            sheets.spreadsheets.values.append({
-              spreadsheetId: '12cblUYuYq4NwZX7JdRo0-NWnrOxlDy-XCbvF3ugzb2c',
-              range: 'PointsBot (DONT RENAME!)!A1:F1',
-              valueInputOption: 'USER_ENTERED',
-              requestBody: {
-                values: [
-                  [receiver, sender, reason, amount, type, date, link],
-                ]
-              }
-            }, (err, data) => {
-              if (err) return console.log('The API returned an error: ' + err);
-              client.sendTextMessage(roomId, `${sender} dished ${BigNumber(splittedMsg[1]).toFormat()} ${splittedMsg[2].toUpperCase()} points to ${splittedMsg[5]}`);
-            });
-          } else if (hasDish) {
-            client.sendTextMessage(roomId, "ERROR, please use the following format:\n!dish [#of points] [type of points] points to [handle] for [reason]");
-          } else if (hasSheet) {
-            client.sendTextMessage(roomId, "The RewardDAO sheet can be found here: " + "https://docs.google.com/spreadsheets/d/12cblUYuYq4NwZX7JdRo0-NWnrOxlDy-XCbvF3ugzb2c/edit?usp=sharing");
-          } else if (hasHelp) {
-            client.sendTextMessage(roomId, "Dish points using the following format:\n!dish [#of points] [type of points] points to [handle] for [reason]");
+          const command = message.split(" ")[0]
+          if (command == "!help"){
+            client.sendTextMessage(roomId, "dish points using the following format:\n!dish [#of points] [type of points] points to [handle] for [reason]");
+          } else if (command == "!dish"){
+            handleDish(event, room, client, auth);
+          } else if (command == "!sheet"){
+            client.sendTextMessage(roomId, "the rewardDAO sheet can be found here: " + "https://docs.google.com/spreadsheets/d/12cbluyuyq4nwzx7jdro0-nwnroxldy-xcbvf3ugzb2c/edit?usp=sharing");
           }
         }
       });
-  
+
       client.startClient(0);
     }
   );
+}
+
+function handleDish(event, room, client, auth){
+  const sender = event.getSender();
+  const message = event.getContent().body;
+  try{
+    const splitMsg = message.split(" ");
+    console.log(splitMsg);
+    const amount = BigNumber(splitMsg[1]).toFormat(2);
+    const type = splitMsg[2].toUpperCase();
+    const receiver = splitMsg[5];
+    const reason = "For" + message.split("for")[1];
+    console.log(message.split("for"));
+    const date = dayjs().format("DD-MMM-YYYY");
+    const link = `https://riot.im/app/#/room/${room.roomId}/${event.getId()}`;
+
+    const values = [[receiver, sender, reason, amount, type, date, link]];
+    const body = {
+      values: values
+    };
+    const sheets = google.sheets({version: 'v4', auth});
+    sheets.spreadsheets.values.append({
+      spreadsheetId: '12cblUYuYq4NwZX7JdRo0-NWnrOxlDy-XCbvF3ugzb2c',
+      range: 'PointsBot (DONT RENAME!)!A1:F1',
+      valueInputOption: 'USER_ENTERED',
+      resource: body
+    }, (err, data) => {
+      if (err) return console.log('The API returned an error: ' + err);
+      client.sendTextMessage(room.roomId, `${sender} dished ${amount} ${type} points to ${receiver}`);
+    });
+  }
+  catch(err) {
+    console.log(err);
+    client.sendTextMessage(room.roomId, "ERROR, please use the following format:\n!dish [#of points] [type of points] points to [handle] for [reason]");
+  }
 }
 
 // Zeit NOW workaround
