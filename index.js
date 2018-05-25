@@ -100,7 +100,7 @@ function authenticated(auth) {
           } else if (command == "!dish"){
             handleDish(event, room, client, auth);
           } else if (command == "!sheet"){
-            client.sendTextMessage(roomId, "the rewardDAO sheet can be found here: " + "https://docs.google.com/spreadsheets/d/12cbluyuyq4nwzx7jdro0-nwnroxldy-xcbvf3ugzb2c/edit?usp=sharing");
+            client.sendTextMessage(roomId, "the rewardDAO sheet can be found here: " + "https://docs.google.com/spreadsheets/d/12cblUYuYq4NwZX7JdRo0-NWnrOxlDy-XCbvF3ugzb2c");
           }
         }
       });
@@ -130,7 +130,7 @@ function handleDish(event, room, client, auth){
       throw pointError;
     }
 
-    if (amount.isGreaterThan(1000)) {
+    if (amount.isGreaterThan(10000)) {
       const pointError = new Error("You can't dish more than 1000 points each time!");
       pointError.code = "POINTS_OVER_THOUSAND";
       throw pointError;
@@ -166,7 +166,7 @@ either add this user to the room, or try again using the format @[userId]:[domai
       throw userError;
     }
     
-    const reason = "For" + message.split("for")[1];
+    const reason = "For" + message.toLowerCase().split("for")[1];
     const date = dayjs().format("DD-MMM-YYYY");
     const link = `https://riot.im/app/#/room/${room.roomId}/${event.getId()}`;
 
