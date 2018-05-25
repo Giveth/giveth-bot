@@ -94,7 +94,7 @@ function authenticated(auth) {
           client.setPresence("online");
           const message = event.getContent().body;
           const roomId = room.roomId;
-          const command = message.split(" ")[0];
+          const command = message.toLowerCase().split(" ")[0];
           if (command == "!help"){
             client.sendTextMessage(roomId, "dish points using the following format:\n!dish [#of points] [type of points] points to [handle] for [reason]");
           } else if (command == "!dish"){
@@ -113,18 +113,40 @@ function authenticated(auth) {
 function handleDish(event, room, client, auth){
   const sender = event.getSender();
   const message = event.getContent().body;
+  
   try {
-    const splitMsg = message.split(" ");
+    const splitMsg = message.toLowerCase().split(" ");
     const amount = new BigNumber(splitMsg[1]);
+
     if (amount.isNaN()){
       const pointError = new Error("Invalid number of points dished. Please enter a valid number and try again");
       pointError.code = "POINTS_NOT_NUMBER";
       throw pointError;
     }
+
+    if (amount.isLessThan(1)) {
+      const pointError = new Error("You can't dish negative or zero amount of points!");
+      pointError.code = "POINTS_ARE_NEGATIVE_OR_ZERO";
+      throw pointError;
+    }
+
+    if (amount.isGreaterThan(1000)) {
+      const pointError = new Error("You can't dish more than 1000 points each time!");
+      pointError.code = "POINTS_OVER_THOUSAND";
+      throw pointError;
+    }
+
     const type = splitMsg[2].toUpperCase();
     if (!point_types.includes(type)) {
       const typeError = new Error(`Invalid point type '${type}'. Please use one of ${point_types}.`);
       typeError.code = "POINT_TYPE_DOES_NOT_EXIST";
+      throw typeError;
+    }
+
+    const hasPointsTo = splitMsg[3] === "points" && splitMsg[4] === "to";
+    if (!hasPointsTo) {
+      const typeError = new Error(`You're missing "points to", please use the following format:\n!dish [#of points] [type of points] points to [handle] for [reason]"`);
+      typeError.code = "MISSING_POINTS_TO";
       throw typeError;
     }
     
@@ -162,7 +184,15 @@ either add this user to the room, or try again using the format @[userId]:[domai
     });
   }
   catch(err) {
-    const MANUAL_ERROR_CODES = ["POINTS_NOT_NUMBER", "USER_DOES_NOT_EXIST", "POINT_TYPE_DOES_NOT_EXIST", "USER_MULTIPLE"];
+    const MANUAL_ERROR_CODES = [
+      "POINTS_NOT_NUMBER",
+      "USER_DOES_NOT_EXIST",
+      "POINT_TYPE_DOES_NOT_EXIST",
+      "MISSING_POINTS_TO",
+      "USER_MULTIPLE",
+      "POINTS_ARE_NEGATIVE_OR_ZERO",
+      "POINTS_OVER_THOUSAND",
+    ];
     console.log(err);
     if (MANUAL_ERROR_CODES.includes(err.code)){
       client.sendTextMessage(room.roomId, "ERROR: " + err.message + "\nType '!help' for more information.");

@@ -8,7 +8,7 @@ module.exports.point_types = [
 	"DAPP",
 	"SC",
 	"COMM",
-	"UNICORN",
+	// "UNICORN",
 ];
 
 module.exports.domains = [
