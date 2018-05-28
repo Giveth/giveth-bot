@@ -150,7 +150,7 @@ function handleDish(event, room, client, auth){
       throw typeError;
     }
     
-    const {userInRoom, receiver, multipleUsers} = findReceiver(room, splitMsg[5]);
+    const {userInRoom, receiver, multipleUsers} = findReceiver(room, message.split(" ")[5]);
     
     if (multipleUsers){
       const userError = new Error(`There are multiple users with the name '${receiver}' in this room.
