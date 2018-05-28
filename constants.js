@@ -14,4 +14,5 @@ module.exports.point_types = [
 module.exports.domains = [
 	"matrix.org",
 	"status.im",
+	"giveth.io",
 ];
