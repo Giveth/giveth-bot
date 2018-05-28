@@ -4,7 +4,7 @@ const {google} = require("googleapis");
 const sdk = require("matrix-js-sdk");
 const BigNumber = require("bignumber.js");
 const dayjs = require("dayjs");
-const { point_types, domains } = require("./constants");
+const { point_types, domains, max_points, sheet_id, sheet_tab_name } = require("./constants");
 
 // If modifying these scopes, delete credentials.json.
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
@@ -100,7 +100,7 @@ function authenticated(auth) {
           } else if (command == "!dish"){
             handleDish(event, room, client, auth);
           } else if (command == "!sheet"){
-            client.sendTextMessage(roomId, "the rewardDAO sheet can be found here: " + "https://docs.google.com/spreadsheets/d/12cblUYuYq4NwZX7JdRo0-NWnrOxlDy-XCbvF3ugzb2c");
+            client.sendTextMessage(roomId, `the rewardDAO sheet can be found here: https://docs.google.com/spreadsheets/d/${sheet_id}`);
           }
         }
       });
@@ -130,9 +130,9 @@ function handleDish(event, room, client, auth){
       throw pointError;
     }
 
-    if (amount.isGreaterThan(10000)) {
-      const pointError = new Error("You can't dish more than 1000 points each time!");
-      pointError.code = "POINTS_OVER_THOUSAND";
+    if (amount.isGreaterThan(max_points)) {
+      const pointError = new Error(`You can't dish more than ${max_points} points each time!`);
+      pointError.code = "POINTS_OVER_MAXIMUM";
       throw pointError;
     }
 
@@ -145,12 +145,19 @@ function handleDish(event, room, client, auth){
 
     const hasPointsTo = splitMsg[3] === "points" && splitMsg[4] === "to";
     if (!hasPointsTo) {
-      const typeError = new Error(`You're missing "points to", please use the following format:\n!dish [#of points] [type of points] points to [handle] for [reason]"`);
+      const typeError = new Error("You're missing \"points to\", please use the following format:\n!dish [#of points] [type of points] points to [handle] for [reason]\"");
       typeError.code = "MISSING_POINTS_TO";
       throw typeError;
     }
     
-    const {userInRoom, receiver, multipleUsers} = findReceiver(room, splitMsg[5]);
+    let {userInRoom, receiver, multipleUsers} = findReceiver(room, splitMsg[5]); // try to find user
+
+    // handle github users
+    const BASE_GITHUB_URL = "https://github.com";
+    if (splitMsg[5].startsWith(BASE_GITHUB_URL)){
+      receiver = splitMsg[5];
+      userInRoom = true, multipleUsers = false;
+    }
     
     if (multipleUsers){
       const userError = new Error(`There are multiple users with the name '${receiver}' in this room.
@@ -174,8 +181,8 @@ either add this user to the room, or try again using the format @[userId]:[domai
     const body = { values };
     const sheets = google.sheets({version: "v4", auth});
     sheets.spreadsheets.values.append({
-      spreadsheetId: "12cblUYuYq4NwZX7JdRo0-NWnrOxlDy-XCbvF3ugzb2c",
-      range: "PointsBot (DONT RENAME!)!A1:F1",
+      spreadsheetId: sheet_id,
+      range: sheet_tab_name,
       valueInputOption: "USER_ENTERED",
       resource: body
     }, (err) => {
@@ -191,7 +198,7 @@ either add this user to the room, or try again using the format @[userId]:[domai
       "MISSING_POINTS_TO",
       "USER_MULTIPLE",
       "POINTS_ARE_NEGATIVE_OR_ZERO",
-      "POINTS_OVER_THOUSAND",
+      "POINTS_OVER_MAXIMUM",
     ];
     console.log(err);
     if (MANUAL_ERROR_CODES.includes(err.code)){
