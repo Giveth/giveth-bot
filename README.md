@@ -16,7 +16,7 @@ Zeit.co NOW is being used to host the bot.
 
 Remove both files from `.gitignore`.
 
-You can run `now -e BOT_USER="name" -e BOT_PASSWORD="password"` to deploy the bot.
+You can run `now -e BOT_USER="name" -e BOT_PASSWORD="password" -e NODE_ENV="production"` to deploy the bot.
 
 ## Usage
 Invite your bot to a room and use one of the folowing commands:
