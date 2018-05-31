@@ -122,7 +122,6 @@ function authenticated(auth) {
 
 function handle_social_coding_welcome(event, state, member, client){
   const user = member.userId;
-  //const user = member.userId;
   client.sendTextMessage(state.roomId, `Wecome ${user} to #giveth-social-coding:matrix.org where your pragma can roam the wild steppe of the blockchain world`);
   client.createRoom({preset: "trusted_private_chat", invite: [user], is_direct: true}).then((res) => {
     client.sendTextMessage(res.room_id, "Now that you’re in [Social Coding] there are a few resources that will help you along the way:\
