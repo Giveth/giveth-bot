@@ -171,7 +171,7 @@ function handleDish(event, room, client, auth){
       throw typeError;
     }
     
-    let {userInRoom, receiver, multipleUsers} = findReceiver(room, message.split(" ")[5]); // try to find user
+    let {userInRoom, receiver, display_name, multipleUsers} = findReceiver(room, message.split(" ")[5]); // try to find user
 
     // handle github users
     const BASE_GITHUB_URL = "https://github.com/";
@@ -198,7 +198,7 @@ either add this user to the room, or try again using the format @[userId]:[domai
     const date = dayjs().format("DD-MMM-YYYY");
     const link = `https://riot.im/app/#/room/${room.roomId}/${event.getId()}`;
 
-    const values = [[receiver, sender, reason, amount.toFormat(2), type, date, link]];
+    const values = [[receiver, sender, reason, amount.toFormat(2), type, date, link, display_name]];
     const body = { values };
     const sheets = google.sheets({version: "v4", auth});
     sheets.spreadsheets.values.append({
@@ -239,6 +239,7 @@ function findReceiver(room, receiver){
   //defaults
   let userInRoom = false;
   let multipleUsers = false;
+  let display_name = "";
   
   if (room.getMember(receiver) != null){
     userInRoom = true;
@@ -248,6 +249,7 @@ function findReceiver(room, receiver){
     for (let domain of domains){
       if (room.getMember(`${receiver}:${domain}`) != null){
         receiver = `${receiver}:${domain}`;
+        display_name = room.getMember(receiver).name;
         
         // if a user has already been found under a different domain
         if (userInRoom){
@@ -265,6 +267,7 @@ function findReceiver(room, receiver){
     userInRoom,
     receiver,
     multipleUsers,
+    display_name,
   };
 }
 
