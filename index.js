@@ -171,11 +171,11 @@ function handleDish(event, room, client, auth){
       throw typeError;
     }
     
-    let {userInRoom, receiver, multipleUsers} = findReceiver(room, splitMsg[5]); // try to find user
+    let {userInRoom, receiver, multipleUsers} = findReceiver(room, message.split(" ")[5]); // try to find user
 
     // handle github users
-    const BASE_GITHUB_URL = "https://github.com";
-    if (splitMsg[5].startsWith(BASE_GITHUB_URL)){
+    const BASE_GITHUB_URL = "https://github.com/";
+    if (splitMsg[5].split(BASE_GITHUB_URL)[1]){
       receiver = splitMsg[5];
       userInRoom = true, multipleUsers = false;
     }
