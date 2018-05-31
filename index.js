@@ -105,9 +105,30 @@ function authenticated(auth) {
         }
       });
 
+      client.once("sync", (syncState) => {
+        if(syncState === "PREPARED") {
+          client.on("RoomState.newMember", (event, state, member) => {
+            const SC_ROOM_ID = "!kUeYRcrXObgGoJlFjn:matrix.org";
+            if (state.roomId == SC_ROOM_ID) {
+              handle_social_coding_welcome(event, state, member, client);
+            }
+          });
+        }
+      });
       client.startClient(0);
     }
   );
+}
+
+function handle_social_coding_welcome(event, state, member, client){
+  const user = member.userId;
+  //const user = member.userId;
+  client.sendTextMessage(state.roomId, `Wecome ${user} to #giveth-social-coding:matrix.org where your pragma can roam the wild steppe of the blockchain world`);
+  client.createRoom({preset: "trusted_private_chat", invite: [user], is_direct: true}).then((res) => {
+    client.sendTextMessage(res.room_id, "Now that you’re in [Social Coding] there are a few resources that will help you along the way:\
+     [What are points](https://medium.com/giveth/how-rewarddao-works-aka-what-are-points-7388f70269a) and [What is Social Coding](https://steemit.com/blockchain4humanity/@giveth/what-is-the-social-coding-circle).\
+    if you have any questions that are not covered in the literature please reach out to @Quazia or @YalorMewn and they will happily follow up with you in 24-48 hours");
+  });
 }
 
 function handleDish(event, room, client, auth){
