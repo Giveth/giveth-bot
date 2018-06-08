@@ -99,7 +99,7 @@ function authenticated(auth) {
             client.sendTextMessage(roomId, "dish points using the following format:\n!dish [#of points] [type of points] points to [handle] for [reason]");
           } else if (command == "!sheet") {
             client.sendTextMessage(roomId, `the rewardDAO sheet can be found here: https://docs.google.com/spreadsheets/d/${sheet_id}`);
-          } else if (message.includes("!dish")) {
+          } else if (message.toLowerCase().includes("!dish")) {
             handleDish(event, room, client, auth);
           }
         }
@@ -141,10 +141,10 @@ function handleDish(event, room, client, auth){
     message = message.split("\n\n")[1];
   }
 
-  const re = /!\s*dish\s+(\S+)\s+(\S+)\s+points\s+to\s+(\S+)\s+for\s+([^\n]+)/g;
+  const re = /!\s*dish\s+(\S+)\s+(\S+)\s+points\s+to\s+(\S+)\s+for\s+([^\n]+)/gi;
   let match;
   do {
-    match = re.exec(message.toLowerCase());
+    match = re.exec(message);
     if (match){
       tryDish(event, room, client, auth, match[1], match[2], match[3].trim(), match[4]);
       matched = true;
