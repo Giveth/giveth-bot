@@ -9,6 +9,11 @@ module.exports.point_types = [
   "SC",
   "COMM",
   "UNICORN",
+  "ARAGON",
+  "FLURKEL",
+  "ETHKAN",
+  "DAPPNODE",
+  "SIGNALING"
 ];
 
 module.exports.domains = [
