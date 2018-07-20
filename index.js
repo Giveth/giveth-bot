@@ -97,10 +97,10 @@ function authenticated(auth) {
           const command = message.toLowerCase().split(" ")[0];
           if (command == "!help"){
             client.sendTextMessage(roomId, "dish points using the following format:\n!dish [#of points] [type of points] points to [handle] for [reason]");
-          } else if (command == "!dish"){
-            handleDish(event, room, client, auth);
-          } else if (command == "!sheet"){
+          } else if (command == "!sheet") {
             client.sendTextMessage(roomId, `the rewardDAO sheet can be found here: https://docs.google.com/spreadsheets/d/${sheet_id}`);
+          } else if (message.toLowerCase().includes("!dish")) {
+            handleDish(event, room, client, auth);
           }
         }
       });
@@ -131,12 +131,35 @@ function handle_social_coding_welcome(event, state, member, client){
 }
 
 function handleDish(event, room, client, auth){
-  const sender = event.getSender();
-  const message = event.getContent().body;
-  
+  let message = event.getContent().body;
+  let matched = false;
+  if (event.getSender() == `@${process.env.BOT_USER}:matrix.org`){ // we sent the message.
+    return;
+  }
+  if (message.trim()[0] == ">"){ //quoting another user, skip the quoted part
+    matched = true;
+    message = message.split("\n\n")[1];
+  }
+
+  const re = /!\s*dish\s+(\S+)\s+(\S+)\s+points\s+to\s+(\S+)\s+for\s+([^\n]+)/gi;
+  let match;
+  do {
+    match = re.exec(message);
+    if (match){
+      tryDish(event, room, client, auth, match[1], match[2], match[3].trim(), match[4]);
+      matched = true;
+    }
+  } while (match);
+  if (!matched){
+    client.sendTextMessage(room.roomId, "ERROR, please use the following format:\n!dish [#of points] [type of points] points to [handle] for [reason]"); 
+  }
+}
+
+function tryDish(event, room, client, auth, nPoints, type, user, reason){
   try {
-    const splitMsg = message.toLowerCase().split(" ");
-    const amount = new BigNumber(splitMsg[1]);
+    const sender = event.getSender();
+    const amount = new BigNumber(nPoints);
+    type = type.toUpperCase();
 
     if (amount.isNaN()){
       const pointError = new Error("Invalid number of points dished. Please enter a valid number and try again");
@@ -156,26 +179,18 @@ function handleDish(event, room, client, auth){
       throw pointError;
     }
 
-    const type = splitMsg[2].toUpperCase();
     if (!point_types.includes(type)) {
       const typeError = new Error(`Invalid point type '${type}'. Please use one of ${point_types}.`);
       typeError.code = "POINT_TYPE_DOES_NOT_EXIST";
       throw typeError;
     }
-
-    const hasPointsTo = splitMsg[3] === "points" && splitMsg[4] === "to";
-    if (!hasPointsTo) {
-      const typeError = new Error("You're missing \"points to\", please use the following format:\n!dish [#of points] [type of points] points to [handle] for [reason]\"");
-      typeError.code = "MISSING_POINTS_TO";
-      throw typeError;
-    }
     
-    let {userInRoom, receiver, display_name, multipleUsers} = findReceiver(room, message.split(" ")[5]); // try to find user
+    let {userInRoom, receiver, display_name, multipleUsers} = findReceiver(room, user); // try to find user
 
     // handle github users
     const BASE_GITHUB_URL = "https://github.com/";
-    if (splitMsg[5].split(BASE_GITHUB_URL)[1]){
-      receiver = splitMsg[5];
+    if (user.split(BASE_GITHUB_URL)[1]){
+      receiver = user;
       userInRoom = true, multipleUsers = false;
     }
     
@@ -192,8 +207,6 @@ either add this user to the room, or try again using the format @[userId]:[domai
       userError.code = "USER_DOES_NOT_EXIST";
       throw userError;
     }
-    
-    const reason = "For" + message.toLowerCase().split("for")[1];
     const date = dayjs().format("DD-MMM-YYYY");
     const link = `https://riot.im/app/#/room/${room.roomId}/${event.getId()}`;
 
@@ -215,7 +228,6 @@ either add this user to the room, or try again using the format @[userId]:[domai
       "POINTS_NOT_NUMBER",
       "USER_DOES_NOT_EXIST",
       "POINT_TYPE_DOES_NOT_EXIST",
-      "MISSING_POINTS_TO",
       "USER_MULTIPLE",
       "POINTS_ARE_NEGATIVE_OR_ZERO",
       "POINTS_OVER_MAXIMUM",
