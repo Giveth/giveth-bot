@@ -72,7 +72,7 @@ Here with **DAO questions**? Plz send a DM to @krrisis or @griffgreen - they’l
 
   // CONTRIBUTORS
   "!OQTaDMKEJXLvTpYoCe:matrix.org": {
-    "externalMsg": "Welcome @user to the Contributors room! Feel free to introduce yourself or ask any question! If you want to help us build out the Giveth Galaxy, make sure to add your details [here](http://bit.ly/GivethMaker). I also sent you a direct message with some more info. ",
+    "externalMsg": "Welcome %USER% to the Contributors room! Feel free to introduce yourself or ask any question! If you want to help us build out the Giveth Galaxy, make sure to add your details [here](http://bit.ly/GivethMaker). I also sent you a direct message with some more info. ",
     "internalMsg": [
       { "msg": "Hey %USER%, welcome to the Contributors room! If you didn’t have time yet to fill out this [document](http://bit.ly/GivethMaker), you should! Even if you don’t have time right now, we might meet in the future! Every month Giveth Gives … eth! If you want to learn more about how you can earn some too, read [this article](https://medium.com/giveth/how-rewarddao-works-aka-what-are-points-7388f70269a)." },
       { "msg": "Have you earned some points (or are planning to!) and would like to know how to get your eth?", "positive": "Great! Well, to receive your eth, the process is easy, just make sure you document your work through a video on our Wall of Fame. More info [here](https://wiki.giveth.io/dac/contributors-guide/)!", "negative": "Sure, no problem! Whenever you want to know just ask me!" }
