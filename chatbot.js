@@ -19,7 +19,7 @@ exports.handleResponse = function (event, room, toStartOfTimeline, client) {
 
         if (privateRooms[user] !== undefined && privateRooms[user].welcoming !== undefined) {
 
-            if (user != client.credentials.userId && room == privateRooms[user]) {
+            if (user != client.credentials.userId && room.roomId == privateRooms[user].room) {
 
                 var questions = messages[privateRooms[user].welcoming.room].internalMsg;
                 var curQuestion = privateRooms[user].welcoming.curQuestion;
@@ -27,14 +27,14 @@ exports.handleResponse = function (event, room, toStartOfTimeline, client) {
                 var positive = false;
                 var negative = false;
                 for (i = 0; i < positiveResponses.length; i++) {
-                    if (msg.includes(positiveResponses[i])) {
+                    if (msg.includes(positiveResponses[i].toLowerCase())) {
                         positive = true;
                         break;
                     }
                 }
 
                 for (i = 0; i < negativeResponses.length; i++) {
-                    if (msg.includes(negativeResponses[i])) {
+                    if (msg.includes(negativeResponses[i].toLowerCase())) {
                         negative = true;
                         break;
                     }
@@ -48,7 +48,7 @@ exports.handleResponse = function (event, room, toStartOfTimeline, client) {
 
                 if (positive || negative) {
                     if (questions.length > curQuestion + 1) {
-                        sendNextQuestion(curQuestion, questions, user, client);
+                        sendNextQuestion(curQuestion, questions, user, client, privateRooms[user].welcoming.room);
                     } else {
                         privateRooms[user].welcoming = undefined;
                     }
@@ -90,6 +90,9 @@ function sendNextQuestion(curQuestion, questions, user, client, room) {
 function sendInternalMessage(msg, user, client, callback) {
     if (privateRooms[user] !== undefined && privateRooms[user].room !== undefined) {
         sendMessage(msg, user, client, privateRooms[user].room);
+        if (callback !== undefined) {
+            callback();
+        }
     } else {
         client.createRoom({ preset: "trusted_private_chat", invite: [user], is_direct: true }).then((res) => {
             privateRooms[user] = { "room": res.room_id };
