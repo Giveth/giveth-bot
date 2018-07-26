@@ -2,9 +2,6 @@ const fs = require("fs");
 const readline = require("readline");
 const { google } = require("googleapis");
 const sdk = require("matrix-js-sdk");
-const BigNumber = require("bignumber.js");
-const dayjs = require("dayjs");
-const { point_types, domains, max_points, sheet_id, sheet_tab_name } = require("./constants");
 const pointsBot = require('./pointsbot.js');
 const chatBot = require('./chatbot.js');
 

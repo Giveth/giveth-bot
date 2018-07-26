@@ -1,3 +1,8 @@
+const dayjs = require("dayjs");
+const { point_types, domains, max_points, sheet_id, sheet_tab_name } = require("./constants");
+const BigNumber = require("bignumber.js");
+const { google } = require("googleapis");
+
 exports.handlePointGiving = function(event, room, toStartOfTimeline, client){
     if (event.getType() === "m.room.message" && toStartOfTimeline === false) {
         client.setPresence("online");
