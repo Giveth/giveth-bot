@@ -93,6 +93,7 @@ function authenticated(auth) {
 
       client.on("Room.timeline", (event, room, toStartOfTimeline) => {
         pointsBot.handlePointGiving(event, room, toStartOfTimeline, client);
+        chatBot.handleResponse(event, room, toStartOfTimeline, client);
       });
 
       client.once("sync", (syncState) => {
