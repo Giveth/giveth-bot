@@ -20,72 +20,85 @@ exports.handlePointGiving = function(auth, event, room, toStartOfTimeline, clien
 };
 
 function handleDish(event, room, client, auth){
-  const sender = event.getSender();
-  const message = event.getContent().body;
-    
+  let message = event.getContent().body;
+  let matched = false;
+  if (event.getSender() == `@${process.env.BOT_USER}:matrix.org`){ // we sent the message.
+    return;
+  }
+  if (message.trim()[0] == ">"){ //quoting another user, skip the quoted part
+    matched = true;
+    message = message.split("\n\n")[1];
+  }
+
+  const re = /!\s*dish\s+(\S+)\s+(\S+)\s+points\s+to\s+(\S+)\s+for\s+([^\n]+)/gi;
+  let match;
+  do {
+    match = re.exec(message);
+    if (match){
+      tryDish(event, room, client, auth, match[1], match[2], match[3].trim(), match[4]);
+      matched = true;
+    }
+  } while (match);
+  if (!matched){
+    client.sendTextMessage(room.roomId, "ERROR, please use the following format:\n!dish [#of points] [type of points] points to [handle] for [reason]"); 
+  }
+}
+
+function tryDish(event, room, client, auth, nPoints, type, user, reason){
   try {
-    const splitMsg = message.toLowerCase().split(" ");
-    const amount = new BigNumber(splitMsg[1]);
-  
+    const sender = event.getSender();
+    const amount = new BigNumber(nPoints);
+    type = type.toUpperCase();
+
     if (amount.isNaN()){
       const pointError = new Error("Invalid number of points dished. Please enter a valid number and try again");
       pointError.code = "POINTS_NOT_NUMBER";
       throw pointError;
     }
-  
+
     if (amount.isLessThan(1)) {
       const pointError = new Error("You can't dish negative or zero amount of points!");
       pointError.code = "POINTS_ARE_NEGATIVE_OR_ZERO";
       throw pointError;
     }
-  
+
     if (amount.isGreaterThan(max_points)) {
       const pointError = new Error(`You can't dish more than ${max_points} points each time!`);
       pointError.code = "POINTS_OVER_MAXIMUM";
       throw pointError;
     }
-  
-    const type = splitMsg[2].toUpperCase();
+
     if (!point_types.includes(type)) {
       const typeError = new Error(`Invalid point type '${type}'. Please use one of ${point_types}.`);
       typeError.code = "POINT_TYPE_DOES_NOT_EXIST";
       throw typeError;
     }
-  
-    const hasPointsTo = splitMsg[3] === "points" && splitMsg[4] === "to";
-    if (!hasPointsTo) {
-      const typeError = new Error("You're missing \"points to\", please use the following format:\n!dish [#of points] [type of points] points to [handle] for [reason]\"");
-      typeError.code = "MISSING_POINTS_TO";
-      throw typeError;
-    }
-      
-    let {userInRoom, receiver, display_name, multipleUsers} = findReceiver(room, message.split(" ")[5]); // try to find user
-  
+    
+    let {userInRoom, receiver, display_name, multipleUsers} = findReceiver(room, user); // try to find user
+
     // handle github users
     const BASE_GITHUB_URL = "https://github.com/";
-    if (splitMsg[5].split(BASE_GITHUB_URL)[1]){
-      receiver = splitMsg[5];
+    if (user.split(BASE_GITHUB_URL)[1]){
+      receiver = user;
       userInRoom = true, multipleUsers = false;
     }
-      
+    
     if (multipleUsers){
       const userError = new Error(`There are multiple users with the name '${receiver}' in this room.
-  please specify the domain name of the user using the format @[userId]:[domain]`);
+please specify the domain name of the user using the format @[userId]:[domain]`);
       userError.code = "USER_MULTIPLE";
       throw userError; 
     }
-  
+
     if (!userInRoom){
       const userError = new Error(`Username '${receiver}' does not exist in this room.
-  either add this user to the room, or try again using the format @[userId]:[domain]`);
+either add this user to the room, or try again using the format @[userId]:[domain]`);
       userError.code = "USER_DOES_NOT_EXIST";
       throw userError;
     }
-      
-    const reason = "For" + message.toLowerCase().split("for")[1];
     const date = dayjs().format("DD-MMM-YYYY");
     const link = `https://riot.im/app/#/room/${room.roomId}/${event.getId()}`;
-  
+
     const values = [[receiver, sender, reason, amount.toFormat(2), type, date, link, display_name]];
     const body = { values };
     const sheets = google.sheets({version: "v4", auth});
@@ -104,7 +117,6 @@ function handleDish(event, room, client, auth){
       "POINTS_NOT_NUMBER",
       "USER_DOES_NOT_EXIST",
       "POINT_TYPE_DOES_NOT_EXIST",
-      "MISSING_POINTS_TO",
       "USER_MULTIPLE",
       "POINTS_ARE_NEGATIVE_OR_ZERO",
       "POINTS_OVER_MAXIMUM",
@@ -117,7 +129,7 @@ function handleDish(event, room, client, auth){
     }
   }
 }
-  
+
 // Try to intelligently format the receiver field
 function findReceiver(room, receiver){
   if (receiver[0] != "@"){
@@ -158,4 +170,3 @@ function findReceiver(room, receiver){
     display_name,
   };
 }
-  
