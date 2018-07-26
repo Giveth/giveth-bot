@@ -44,7 +44,7 @@ module.exports.messages = {
   },
 
   // GENERAL
-  "#giveth-general:matrix.org": {
+  "!vwFGsktMNkdorFWJRi:matrix.org": {
     "internalMsg": [
       { "msg": "Hey %USER%, welcome to Giveth!! First a few tips if you are a new Riot user: [Download Riot](https://about.riot.im/downloads/) on your device for quick and easy access Limit notifications per room [by changing it](https://about.riot.im/need-help/#rooms-section) to mentions only" },
       {
@@ -71,7 +71,7 @@ Here with **DAO questions**? Plz send a DM to @krrisis or @griffgreen - they’l
   },
 
   // CONTRIBUTORS
-  "#giveth-contributors:matrix.org": {
+  "!OQTaDMKEJXLvTpYoCe:matrix.org": {
     "externalMsg": "Welcome @user to the Contributors room! Feel free to introduce yourself or ask any question! If you want to help us build out the Giveth Galaxy, make sure to add your details [here](http://bit.ly/GivethMaker). I also sent you a direct message with some more info. ",
     "internalMsg": [
       { "msg": "Hey %USER%, welcome to the Contributors room! If you didn’t have time yet to fill out this [document](http://bit.ly/GivethMaker), you should! Even if you don’t have time right now, we might meet in the future! Every month Giveth Gives … eth! If you want to learn more about how you can earn some too, read [this article](https://medium.com/giveth/how-rewarddao-works-aka-what-are-points-7388f70269a)." },
@@ -80,7 +80,7 @@ Here with **DAO questions**? Plz send a DM to @krrisis or @griffgreen - they’l
   },
 
   // COMMUNITIES
-  "#giveth-communities:matrix.org": {
+  "!FBZLHmkNLmabnszigV:matrix.org": {
     "externalMsg": "Welcome %USER% to the Communities room! Feel free to introduce yourself or ask any question! If you want to help us test the DApp releases, please let us know right here! If you want to be or help us build one of the first Communities (DACs) or Campaigns on the DApp, please take a minute and fill out this [form](http://bit.ly/GivethCommunity)!",
     "internalMsg": [
       { "msg": "Hey %USER%, welcome to the Communities room! If you didn’t have time yet to fill out this [document](http://bit.ly/GivethCommunity), you should!" }
@@ -88,20 +88,20 @@ Here with **DAO questions**? Plz send a DM to @krrisis or @griffgreen - they’l
   },
 
   // COMMUNICATIONS
-  "#giveth-communication:matrix.org": {
+  "!mbUGUXUxvuGxvjQJtL:matrix.org": {
     "externalMsg": "Welcome %USER% to the Communications room! Feel free to introduce yourself or ask any question! If you have any specific communication skills and want to help out, make sure to add your details [here](http://bit.ly/GivethMaker)",
     "internalMsg": "Hey %USER%, welcome to the Communications room! If you want to actively participate and help us Build the Future of Giving make sure to join our Communications Circle Meeting [here](https://meet.jit.si/giveth-communication). This normally takes place every Wednesday at 5PM CET and is announced in the room."
   },
 
 
   // GOVERNANCE
-  "#giveth-governance:matrix.org": {
+  "!qsjCsmTVnObJyCZkqq:matrix.org": {
     "externalMsg": "Welcome %USER% to the Governance room! Feel free to introduce yourself or ask any question",
     "internalMsg": "Hey %USER%, welcome to the Governance room! If you want to actively participate and help us Build the Future of Giving you are welcome to join our Governance Meeting [here](https://meet.jit.si/giveth-gov) . This normally takes place every Thursday at 5PM CET and is announced in the room."
   },
 
   // DApp DEVELOPMENT
-  "#giveth-product-development:matrix.org": {
+  "!pJNSuPMvcrDttmJFvV:matrix.org": {
     "internalMsg": "It seems that you have just joined DApp Development channel! Here are some links to get you started.\
       \
       If you want to better understand what we are building:\
