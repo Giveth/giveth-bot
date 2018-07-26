@@ -19,39 +19,42 @@ exports.handleResponse = function (event, room, toStartOfTimeline, client) {
 
         if (privateRooms[user] !== undefined && privateRooms[user].welcoming !== undefined) {
 
-            var questions = messages[privateRooms[user].welcoming.room].internalMsg;
-            var curQuestion = privateRooms[user].welcoming.curQuestion;
+            if (user != client.credentials.userId && room == privateRooms[user]) {
 
-            var positive = false;
-            var negative = false;
-            for (i = 0; i < positiveResponses.length; i++) {
-                if (msg.includes(positiveResponses[i])) {
-                    positive = true;
-                    break;
+                var questions = messages[privateRooms[user].welcoming.room].internalMsg;
+                var curQuestion = privateRooms[user].welcoming.curQuestion;
+
+                var positive = false;
+                var negative = false;
+                for (i = 0; i < positiveResponses.length; i++) {
+                    if (msg.includes(positiveResponses[i])) {
+                        positive = true;
+                        break;
+                    }
                 }
-            }
 
-            for (i = 0; i < negativeResponses.length; i++) {
-                if (msg.includes(negativeResponses[i])) {
-                    negative = true;
-                    break;
+                for (i = 0; i < negativeResponses.length; i++) {
+                    if (msg.includes(negativeResponses[i])) {
+                        negative = true;
+                        break;
+                    }
                 }
-            }
 
-            if (positive) {
-                sendInternalMessage(questions[curQuestion].positive, user, client);
-            } else if (negative) {
-                sendInternalMessage(questions[curQuestion].negative, user, client);
-            }
+                if (positive) {
+                    sendInternalMessage(questions[curQuestion].positive, user, client);
+                } else if (negative) {
+                    sendInternalMessage(questions[curQuestion].negative, user, client);
+                }
 
-            if (positive || negative) {
-                if (questions.length > curQuestion + 1) {
-                    sendNextQuestion(curQuestion, questions, user, client);
+                if (positive || negative) {
+                    if (questions.length > curQuestion + 1) {
+                        sendNextQuestion(curQuestion, questions, user, client);
+                    } else {
+                        privateRooms[user].welcoming = undefined;
+                    }
                 } else {
-                    privateRooms[user].welcoming = undefined;
+                    sendInternalMessage("I didn't recognize that response :(", user, client);
                 }
-            } else {
-                sendInternalMessage("I didn't recognize that response :(", user, client);
             }
         }
     }
@@ -64,7 +67,9 @@ function handleWelcome(state, user, client, externalMsg, internalMsg) {
     if (typeof internalMsg === "string") {
         sendInternalMessage(internalMsg, user, client);
     } else if (typeof internalMsg === "object") {
-        sendNextQuestion(-1, internalMsg, user, client, state.roomId);
+        if (privateRooms[user] === undefined || (privateRooms[user] !== undefined && privateRooms[user].welcoming === undefined)) {
+            sendNextQuestion(-1, internalMsg, user, client, state.roomId);
+        }
     }
 }
 
@@ -89,7 +94,9 @@ function sendInternalMessage(msg, user, client, callback) {
         client.createRoom({ preset: "trusted_private_chat", invite: [user], is_direct: true }).then((res) => {
             privateRooms[user] = { "room": res.room_id };
             sendMessage(msg, user, client, privateRooms[user].room);
-            callback();
+            if (callback !== undefined) {
+                callback();
+            }
         });
     }
 }
