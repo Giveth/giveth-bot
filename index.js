@@ -2,8 +2,8 @@ const fs = require("fs");
 const readline = require("readline");
 const { google } = require("googleapis");
 const sdk = require("matrix-js-sdk");
-const pointsBot = require('./pointsbot.js');
-const chatBot = require('./chatbot.js');
+const pointsBot = require("./pointsbot.js");
+const chatBot = require("./chatbot.js");
 
 // If modifying these scopes, delete credentials.json.
 const SCOPES = ["https://www.googleapis.com/auth/spreadsheets"];
@@ -89,7 +89,7 @@ function authenticated(auth) {
       });
 
       client.on("Room.timeline", (event, room, toStartOfTimeline) => {
-        pointsBot.handlePointGiving(event, room, toStartOfTimeline, client);
+        pointsBot.handlePointGiving(auth, event, room, toStartOfTimeline, client);
         chatBot.handleResponse(event, room, toStartOfTimeline, client);
       });
 
