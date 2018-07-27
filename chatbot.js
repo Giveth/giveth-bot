@@ -3,7 +3,7 @@ var privateRooms = {};
 
 const { positiveResponses, negativeResponses, messages, questions } = require("./constants");
 
-fs.readFile('./privateRooms.json', 'utf8', function (err, data) {
+fs.readFile("./privateRooms.json", "utf8", function (err, data) {
   if (!err) {
     privateRooms = JSON.parse(data);
   }
@@ -159,5 +159,5 @@ function sendMessage(msg, user, client, room) {
 }
 
 function savePrivateRooms() {
-  fs.writeFile('./privateRooms.json', JSON.stringify(privateRooms, null, 2), 'utf-8');
+  fs.writeFile("./privateRooms.json", JSON.stringify(privateRooms, null, 2), "utf-8");
 }
