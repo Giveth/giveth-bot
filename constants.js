@@ -120,3 +120,81 @@ Here with **DAO questions**? Plz send a DM to @krrisis or @griffgreen - they’l
       Check out our [DApp Github page](https://github.com/giveth/giveth-dapp) and don’t hesitate to pick on of the [help wanted](https://github.com/Giveth/giveth-dapp/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22) issues\\"
   }
 };
+
+module.exports.questions = {
+  // SOCIAL CODING
+  /**"!kUeYRcrXObgGoJlFjn:matrix.org": [
+
+  ],**/
+
+  // GENERAL
+  "!vwFGsktMNkdorFWJRi:matrix.org": [
+    {
+      "trigger": "download riot",
+      "answer": "[Download Riot](https://about.riot.im/downloads/) on your device for quick and easy access"
+    },
+    {
+      "trigger": "too many notifications",
+      "answer": "Limit notifications per room [by changing it](https://about.riot.im/need-help/#rooms-section) to mentions only"
+    },
+    {
+      "trigger": "more info on Giveth",
+      "answer": "To get up to speed on what we do and who we are the best place to start is our [website](http://giveth.io/).\
+      Next stop is our [wiki](https://wiki.giveth.io/), where you can find a number of useful guides, our roadmap and so much more.\
+      [Medium](https://medium.com/giveth) is where we post most of our articles. The most relevant articles are pinned at the top!\
+      And on youtube you can discover [some of our interviews and streams](http://youtube.com/givethio), including [most of our meetings](https://www.youtube.com/channel/UCdqmP4axeI1hNmX20aZsOwg?view_as=subscriber)!"
+    },
+    {
+      "trigger": "which rooms",
+      "answer": "[Here](https://riot.im/app/#/group/+giveth:matrix.org) you can find an overview of all our rooms."
+    }
+  ],
+
+  // CONTRIBUTORS
+  "!OQTaDMKEJXLvTpYoCe:matrix.org": [
+    {
+      "trigger": "get my eth",
+      "answer": "To receive your eth, the process is easy, just make sure you document your work through a video on our Wall of Fame. More info [here](https://wiki.giveth.io/dac/contributors-guide/)!"
+    },
+    {
+      "trigger": "not received my eth",
+      "answer": "It takes a while to create the Milestones for all contributors and pay these out. If it is taking longer than a month, please send a message to @ljg583:matrix.org"
+    }
+  ],
+
+  // COMMUNITIES
+  "!FBZLHmkNLmabnszigV:matrix.org": [
+    {
+      "trigger": ["be a tester", "test the dapp"],
+      "answer": "Great news! @vojtech:matrix.org will be in touch! If he isn’t, stalk him :-)"
+    },
+    {
+      "trigger": "form for communities",
+      "answer": "If you want to be or help us build one of the first Communities (DACs) or Campaigns on the DApp, please take a minute and fill out this [form](http://bit.ly/GivethCommunity)!"
+    }
+  ],
+
+  // COMMUNICATIONS
+  "!mbUGUXUxvuGxvjQJtL:matrix.org": [
+    {
+      "trigger": "join the Communication Meeting",
+      "answer": "The Comms meeting takes place on Wednesday at 05.00PM CE(S)T, (= 11AM EDT - 04PM UTC/GMT+1 -- 8AM PT -- 10PM ICT) - Join us [here](https://meet.jit.si/giveth-communication)"
+    },
+    {
+      "trigger": "Comms Meeting notes",
+      "answer": "All Communication Circle meeting notes can be found [here](https://drive.google.com/open?id=15Lohfdi7UuZU-TL-ajltY2kPEc2fTrDF)"
+    }
+  ],
+
+  // GOVERNANCE
+  "!qsjCsmTVnObJyCZkqq:matrix.org": [
+    {
+      "trigger": "join the Governance Meeting",
+      "answer": "The Governance meeting takes place on Thursday at 06.00PM CE(S)T, (= 12PM EDT - 05PM UTC/GMT+1 -- 9AM PT -- 11PM ICT) - Join us [here](https://meet.jit.si/giveth-communication)"
+    }
+  ]
+
+  // DApp DEVELOPMENT
+  /**"!pJNSuPMvcrDttmJFvV:matrix.org": [
+  ]**/
+};
