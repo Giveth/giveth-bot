@@ -54,30 +54,43 @@ exports.handleResponse = function (event, room, toStartOfTimeline, client) {
         sendInternalMessage("I didn't recognize that response :(", user, client);
       }
     } else if ((privateRooms[user] === undefined || privateRooms[user].welcoming === undefined) && user != client.credentials.userId) {
-      var questionsForRoom = questions["!FBZLHmkNLmabnszigV:matrix.org"];
-      if (questionsForRoom !== undefined) {
-        for (var i = 0; i < questionsForRoom.length; i++) {
-          var question = questionsForRoom[i];
-          var shouldAnswerQuestion = false;
-          if (typeof question.trigger === "string") {
-            shouldAnswerQuestion = msg.toLowerCase().includes(question.trigger.toLowerCase());
-          } else {
-            for (var t = 0; t < question.trigger.length; t++) {
-              if (msg.toLowerCase().includes(question.trigger[t].toLowerCase())) {
-                shouldAnswerQuestion = true;
-                break;
-              }
-            }
-          }
-          if (shouldAnswerQuestion) {
-            sendMessage(question.answer, user, client, room.roomId);
+      if (privateRooms[user] !== undefined && privateRooms[user].room == room.roomId) {
+        for (var key in questions) {
+          if (questions.hasOwnProperty(key) && checkForRoomQuestions(msg, key, room.roomId, user, client)) {
             break;
           }
         }
+      } else {
+        checkForRoomQuestions(msg, room.roomId, room.roomId, user, client);
       }
     }
   }
 };
+
+function checkForRoomQuestions(msg, roomForQuestions, roomToSendIn, user, client) {
+  var questionsForRoom = questions[roomForQuestions];
+  if (questionsForRoom !== undefined) {
+    for (var i = 0; i < questionsForRoom.length; i++) {
+      var question = questionsForRoom[i];
+      var shouldAnswerQuestion = false;
+      if (typeof question.trigger === "string") {
+        shouldAnswerQuestion = msg.toLowerCase().includes(question.trigger.toLowerCase());
+      } else {
+        for (var t = 0; t < question.trigger.length; t++) {
+          if (msg.toLowerCase().includes(question.trigger[t].toLowerCase())) {
+            shouldAnswerQuestion = true;
+            break;
+          }
+        }
+      }
+      if (shouldAnswerQuestion) {
+        sendMessage(question.answer, user, client, roomToSendIn);
+        return true;
+      }
+    }
+  }
+  return false;
+}
 
 function handleWelcome(state, user, client, externalMsg, internalMsg) {
   if (typeof externalMsg === "string") {
