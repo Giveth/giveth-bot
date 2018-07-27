@@ -1,5 +1,5 @@
 const fs = require("fs");
-const privateRooms = {};
+var privateRooms = {};
 
 const { positiveResponses, negativeResponses, messages, questions } = require("./constants");
 
@@ -70,6 +70,13 @@ exports.handleResponse = function (event, room, toStartOfTimeline, client) {
       } else {
         checkForRoomQuestions(msg, room.roomId, room.roomId, user, client);
       }
+    }
+  } else if (event.getType() === "m.room.member" && event.event.membership === "leave") {
+    var privateRoom = privateRooms[event.getSender()];
+    if (privateRoom !== undefined && privateRoom.room == event.event.room_id) {
+      privateRoom.room = undefined;
+      privateRoom.welcoming = undefined;
+      savePrivateRooms();
     }
   }
 };
