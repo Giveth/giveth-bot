@@ -45,6 +45,7 @@ module.exports.messages = {
 
   // GENERAL
   "!vwFGsktMNkdorFWJRi:matrix.org": {
+    "externalMsg": "Welcome %USER% to Giveth! Feel free to introduce yourself or ask any question! You can find an overview of all our [rooms here](https://riot.im/app/#/group/+giveth:matrix.org), I also sent you a direct message with more info.",
     "internalMsg": [
       { "msg": "Hey %USER%, welcome to Giveth!! First a few tips if you are a new Riot user: [Download Riot](https://about.riot.im/downloads/) on your device for quick and easy access Limit notifications per room [by changing it](https://about.riot.im/need-help/#rooms-section) to mentions only" },
       {
@@ -118,4 +119,4 @@ Here with **DAO questions**? Plz send a DM to @krrisis or @griffgreen - they’l
       If you want to understand how we work\
       Check out our [DApp Github page](https://github.com/giveth/giveth-dapp) and don’t hesitate to pick on of the [help wanted](https://github.com/Giveth/giveth-dapp/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22) issues\\"
   }
-}
+};
