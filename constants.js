@@ -119,4 +119,4 @@ Here with **DAO questions**? Plz send a DM to @krrisis or @griffgreen - they’l
       If you want to understand how we work\
       Check out our [DApp Github page](https://github.com/giveth/giveth-dapp) and don’t hesitate to pick on of the [help wanted](https://github.com/Giveth/giveth-dapp/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22) issues\\"
   }
-}
+};
