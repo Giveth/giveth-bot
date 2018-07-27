@@ -60,7 +60,7 @@ exports.handleResponse = function (event, room, toStartOfTimeline, client) {
           var question = questionsForRoom[i];
           var shouldAnswerQuestion = false;
           if (typeof question.trigger === "string") {
-            shouldAnswerQuestion = msg.toLowerCase().includes(question.trigger.toLowerCase())
+            shouldAnswerQuestion = msg.toLowerCase().includes(question.trigger.toLowerCase());
           } else {
             for (var t = 0; t < question.trigger.length; t++) {
               if (msg.toLowerCase().includes(question.trigger[t].toLowerCase())) {
