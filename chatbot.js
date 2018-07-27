@@ -1,6 +1,13 @@
+const fs = require("fs");
 const privateRooms = {};
 
 const { positiveResponses, negativeResponses, messages, questions } = require("./constants");
+
+fs.readFile('./privateRooms.json', 'utf8', function (err, data) {
+  if (!err) {
+    privateRooms = JSON.parse(data);
+  }
+});
 
 exports.handleNewMember = function (event, state, member, client) {
   const user = member.userId;
@@ -128,6 +135,7 @@ function sendInternalMessage(msg, user, client, callback) {
   } else {
     client.createRoom({ preset: "trusted_private_chat", invite: [user], is_direct: true }).then((res) => {
       privateRooms[user] = { "room": res.room_id };
+      savePrivateRooms();
       sendMessage(msg, user, client, privateRooms[user].room);
       if (callback !== undefined) {
         callback();
@@ -141,4 +149,8 @@ function sendMessage(msg, user, client, room) {
     msg = msg.replace("%USER%", user);
     client.sendTextMessage(room, msg);
   }
+}
+
+function savePrivateRooms() {
+  fs.writeFile('./privateRooms.json', JSON.stringify(privateRooms, null, 2), 'utf-8');
 }
