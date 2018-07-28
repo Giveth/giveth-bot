@@ -60,7 +60,7 @@ exports.handleResponse = function (event, room, toStartOfTimeline, client) {
       } else {
         sendInternalMessage("I didn't recognize that response :(", user, client);
       }
-    } else if ((privateRooms[user] === undefined || privateRooms[user].welcoming === undefined) && user != client.credentials.userId) {
+    } else if ((!privateRooms[user] || !privateRooms[user].welcoming) && user != client.credentials.userId) {
       if (privateRooms[user] && privateRooms[user].room == room.roomId) {
         for (var key in questions) {
           if (questions.hasOwnProperty(key) && checkForRoomQuestions(msg, key, room.roomId, user, client)) {
@@ -113,7 +113,7 @@ function handleWelcome(state, user, client, externalMsg, internalMsg) {
   if (typeof internalMsg === "string") {
     sendInternalMessage(internalMsg, user, client);
   } else if (typeof internalMsg === "object") {
-    if (privateRooms[user] === undefined || (privateRooms[user] && privateRooms[user].welcoming === undefined)) {
+    if (!privateRooms[user] || (privateRooms[user] && !privateRooms[user].welcoming)) {
       sendNextQuestion(-1, internalMsg, user, client, state.roomId);
     }
   }
@@ -126,7 +126,7 @@ function sendNextQuestion(curQuestion, questions, user, client, room) {
   }
   var question = questions[curQuestion];
   sendInternalMessage(question.msg, user, client, () => {
-    if (question.positive === undefined) {
+    if (!question.positive) {
       sendNextQuestion(curQuestion, questions, user, client, room);
     }
   });
