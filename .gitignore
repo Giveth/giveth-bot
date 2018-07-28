@@ -3,6 +3,7 @@ yarn.lock
 client_secret.json
 credentials.json
 package-lock.json
+privateRooms.json
 *.swp
 *.swo
 *~
