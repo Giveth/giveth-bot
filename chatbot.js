@@ -14,7 +14,7 @@ exports.handleNewMember = function (event, state, member, client) {
 
   var roomMessages = messages[state.roomId];
 
-  if (roomMessages !== undefined) {
+  if (roomMessages) {
     handleWelcome(state, user, client, roomMessages.externalMsg, roomMessages.internalMsg);
   }
 };
@@ -24,7 +24,7 @@ exports.handleResponse = function (event, room, toStartOfTimeline, client) {
     var msg = event.getContent().body;
     const user = event.getSender();
 
-    if (privateRooms[user] !== undefined && privateRooms[user].welcoming !== undefined && user != client.credentials.userId && room.roomId == privateRooms[user].room) {
+    if (privateRooms[user] && privateRooms[user].welcoming && user != client.credentials.userId && room.roomId == privateRooms[user].room) {
 
       var greetingQuestions = messages[privateRooms[user].welcoming.room].internalMsg;
       var curQuestion = privateRooms[user].welcoming.curQuestion;
@@ -61,7 +61,7 @@ exports.handleResponse = function (event, room, toStartOfTimeline, client) {
         sendInternalMessage("I didn't recognize that response :(", user, client);
       }
     } else if ((privateRooms[user] === undefined || privateRooms[user].welcoming === undefined) && user != client.credentials.userId) {
-      if (privateRooms[user] !== undefined && privateRooms[user].room == room.roomId) {
+      if (privateRooms[user] && privateRooms[user].room == room.roomId) {
         for (var key in questions) {
           if (questions.hasOwnProperty(key) && checkForRoomQuestions(msg, key, room.roomId, user, client)) {
             break;
@@ -73,7 +73,7 @@ exports.handleResponse = function (event, room, toStartOfTimeline, client) {
     }
   } else if (event.getType() === "m.room.member" && event.event.membership === "leave") {
     var privateRoom = privateRooms[event.getSender()];
-    if (privateRoom !== undefined && privateRoom.room == event.event.room_id) {
+    if (privateRoom && privateRoom.room == event.event.room_id) {
       privateRoom.room = undefined;
       privateRoom.welcoming = undefined;
       savePrivateRooms();
@@ -83,7 +83,7 @@ exports.handleResponse = function (event, room, toStartOfTimeline, client) {
 
 function checkForRoomQuestions(msg, roomForQuestions, roomToSendIn, user, client) {
   var questionsForRoom = questions[roomForQuestions];
-  if (questionsForRoom !== undefined) {
+  if (questionsForRoom) {
     for (var i = 0; i < questionsForRoom.length; i++) {
       var question = questionsForRoom[i];
       var shouldAnswerQuestion = false;
@@ -113,7 +113,7 @@ function handleWelcome(state, user, client, externalMsg, internalMsg) {
   if (typeof internalMsg === "string") {
     sendInternalMessage(internalMsg, user, client);
   } else if (typeof internalMsg === "object") {
-    if (privateRooms[user] === undefined || (privateRooms[user] !== undefined && privateRooms[user].welcoming === undefined)) {
+    if (privateRooms[user] === undefined || (privateRooms[user] && privateRooms[user].welcoming === undefined)) {
       sendNextQuestion(-1, internalMsg, user, client, state.roomId);
     }
   }
@@ -121,7 +121,7 @@ function handleWelcome(state, user, client, externalMsg, internalMsg) {
 
 function sendNextQuestion(curQuestion, questions, user, client, room) {
   curQuestion++;
-  if (privateRooms[user] !== undefined) {
+  if (privateRooms[user]) {
     privateRooms[user].welcoming = { "room": room, "curQuestion": curQuestion };
   }
   var question = questions[curQuestion];
@@ -134,9 +134,9 @@ function sendNextQuestion(curQuestion, questions, user, client, room) {
 }
 
 function sendInternalMessage(msg, user, client, callback) {
-  if (privateRooms[user] !== undefined && privateRooms[user].room !== undefined) {
+  if (privateRooms[user] && privateRooms[user].room) {
     sendMessage(msg, user, client, privateRooms[user].room);
-    if (callback !== undefined) {
+    if (callback) {
       callback();
     }
   } else {
@@ -144,7 +144,7 @@ function sendInternalMessage(msg, user, client, callback) {
       privateRooms[user] = { "room": res.room_id };
       savePrivateRooms();
       sendMessage(msg, user, client, privateRooms[user].room);
-      if (callback !== undefined) {
+      if (callback) {
         callback();
       }
     });
