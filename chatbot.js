@@ -1,4 +1,5 @@
 const fs = require("fs");
+const markdown = require("markdown").markdown;
 var privateRooms = {};
 
 const { positiveResponses, negativeResponses, messages, questions } = require("./constants");
@@ -154,7 +155,7 @@ function sendInternalMessage(msg, user, client, callback) {
 function sendMessage(msg, user, client, room) {
   if (msg.length > 0) {
     msg = msg.replace("%USER%", user);
-    client.sendTextMessage(room, msg);
+    client.sendHtmlMessage(room, msg, markdown.toHTML(msg));
   }
 }
 
