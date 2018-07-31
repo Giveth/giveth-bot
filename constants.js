@@ -45,13 +45,13 @@ module.exports.messages = {
 
   // GENERAL
   "!vwFGsktMNkdorFWJRi:matrix.org": {
-    "externalMsg": "Welcome %USER% to Giveth! Feel free to introduce yourself or ask any question! You can find an overview of all our rooms here: (https://riot.im/app/#/group/+giveth:matrix.org), I also sent you a direct message with more info.",
+    "externalMsg": "Welcome %USER% to Giveth! Feel free to introduce yourself or ask any question! You can find an overview of all our rooms here: [x](https://riot.im/app/#/group/+giveth:matrix.org), I also sent you a direct message with more info.",
     "internalMsg": [
       { "msg": "Hey %USER%, welcome to Giveth!! First a few tips if you are a new Riot user:\n\
       \n* [Download Riot](https://about.riot.im/downloads/) on your device for quick and easy access\n\
       \n* Limit notifications per room [by changing it](https://about.riot.im/need-help/#rooms-section) to mentions only" },
       {
-        "msg": "Do you want to know which rooms you can join?", "positive": "You can find an overview of all our rooms here: (https://riot.im/app/#/group/+giveth:matrix.org)\
+        "msg": "Do you want to know which rooms you can join?", "positive": "You can find an overview of all our rooms here: [x](https://riot.im/app/#/group/+giveth:matrix.org)\
     Some more info about some of them:\n\
 \n* Do you aim to - or already are - united around **good causes**? Join the conversation & sign up for DApp testing in [Communities](https://riot.im/app/#/room/#giveth-communities:matrix.org).\
 \n* Do you have **time & energy**? Good. Every month we Give Eth to [Contributors](https://riot.im/app/#/room/#giveth-contributors:matrix.org)\
@@ -145,7 +145,7 @@ module.exports.questions = {
     },
     {
       "trigger": "which rooms",
-      "answer": "[Here](https://riot.im/app/#/group/+giveth:matrix.org) you can find an overview of all our rooms."
+      "answer": "You can find an overview of all our rooms here: [x](https://riot.im/app/#/group/+giveth:matrix.org)"
     }
   ],
 
