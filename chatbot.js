@@ -155,6 +155,7 @@ function sendInternalMessage(msg, user, client, callback) {
 function sendMessage(msg, user, client, room) {
   if (msg.length > 0) {
     msg = msg.replace("%USER%", user);
+    msg = msg.replace(/^ +| +$/gm, "");
     client.sendHtmlMessage(room, msg, markdown.toHTML(msg));
   }
 }
