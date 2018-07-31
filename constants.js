@@ -37,28 +37,30 @@ module.exports.negativeResponses = ["no"];
 module.exports.messages = {
   // SOCIAL CODING
   "!kUeYRcrXObgGoJlFjn:matrix.org": {
-    "internalMsg": "Now that you’re in [Social Coding] there are a few resources that will help you along the way:\
-    [What are points](https://medium.com/giveth/how-rewarddao-works-aka-what-are-points-7388f70269a) and [What is Social Coding](https://steemit.com/blockchain4humanity/@giveth/what-is-the-social-coding-circle).\
+    "internalMsg": "Now that you’re in Social Coding there are a few resources that will help you along the way:\
+    [What are points](https://medium.com/giveth/how-rewarddao-works-aka-what-are-points-7388f70269a) and [What is Social Coding](https://medium.com/giveth/what-is-social-coding-fa81feacfa32).\
    if you have any questions that are not covered in the literature please reach out to @Quazia or @YalorMewn and they will happily follow up with you in 24-48 hours",
-    "externalMsg": "Welcome %USER% to #giveth-social-coding:matrix.org where your pragma can roam the wild steppe of the blockchain world"
+    "externalMsg": "Welcome %USER% to Social Coding where your pragma can roam the wild steppe of the blockchain world. I’ve also sent you a direct message with more info."
   },
 
   // GENERAL
   "!vwFGsktMNkdorFWJRi:matrix.org": {
-    "externalMsg": "Welcome %USER% to Giveth! Feel free to introduce yourself or ask any question! You can find an overview of all our [rooms here](https://riot.im/app/#/group/+giveth:matrix.org), I also sent you a direct message with more info.",
+    "externalMsg": "Welcome %USER% to Giveth! Feel free to introduce yourself or ask any question! You can find an overview of all our rooms here: (https://riot.im/app/#/group/+giveth:matrix.org), I also sent you a direct message with more info.",
     "internalMsg": [
-      { "msg": "Hey %USER%, welcome to Giveth!! First a few tips if you are a new Riot user: [Download Riot](https://about.riot.im/downloads/) on your device for quick and easy access Limit notifications per room [by changing it](https://about.riot.im/need-help/#rooms-section) to mentions only" },
+      { "msg": "Hey %USER%, welcome to Giveth!! First a few tips if you are a new Riot user:\n\
+      \n* [Download Riot](https://about.riot.im/downloads/) on your device for quick and easy access\n\
+      \n* Limit notifications per room [by changing it](https://about.riot.im/need-help/#rooms-section) to mentions only" },
       {
-        "msg": "Do you want to know which rooms you can join?", "positive": "[Here](https://riot.im/app/#/group/+giveth:matrix.org) you can find an overview of all our rooms.\
-    Some more info about some of them:\
-Do you aim to - or already are - united around **good causes**? Join the conversation & sign up for DApp testing in [Communities](https://riot.im/app/#/room/#giveth-communities:matrix.org).\
-Do you have **time & energy**? Good. Every month we Give Eth to [Contributors](https://riot.im/app/#/room/#giveth-contributors:matrix.org)\
-Up for some **real talk**? Share & care in [Blockchaintalk](https://riot.im/app/#/room/#giveth-blockchaintalk:matrix.org) \
-Check our **product progress** in [Dapp Development](https://riot.im/app/#/room/#giveth-product-development:matrix.org) \
-Help us **create** and connect in [Communication](https://riot.im/app/#/room/#giveth-communication:matrix.org)\
-**Hack away** on projects you select in [Social Coding](https://riot.im/app/#/room/#giveth-social-coding:matrix.org)\
-See how we are **decentralizing** us and everyone else in [Governance](https://riot.im/app/#/room/#giveth-governance:matrix.org)\
-Here with **DAO questions**? Plz send a DM to @krrisis or @griffgreen - they’ll add you to the discussion.\
+        "msg": "Do you want to know which rooms you can join?", "positive": "You can find an overview of all our rooms here: (https://riot.im/app/#/group/+giveth:matrix.org)\
+    Some more info about some of them:\n\
+\n* Do you aim to - or already are - united around **good causes**? Join the conversation & sign up for DApp testing in [Communities](https://riot.im/app/#/room/#giveth-communities:matrix.org).\
+\n* Do you have **time & energy**? Good. Every month we Give Eth to [Contributors](https://riot.im/app/#/room/#giveth-contributors:matrix.org)\
+\n* Up for some **real talk**? Share & care in [Blockchaintalk](https://riot.im/app/#/room/#giveth-blockchaintalk:matrix.org) \
+\n* Check our **product progress** in [Dapp Development](https://riot.im/app/#/room/#giveth-product-development:matrix.org) \
+\n* Help us **create** and connect in [Communication](https://riot.im/app/#/room/#giveth-communication:matrix.org)\
+\n* **Hack away** on projects you select in [Social Coding](https://riot.im/app/#/room/#giveth-social-coding:matrix.org)\
+\n* See how we are **decentralizing** us and everyone else in [Governance](https://riot.im/app/#/room/#giveth-governance:matrix.org)\
+\n* Here with **DAO questions**? Plz send a DM to @krrisis or @griffgreen - they’ll add you to the discussion.\
 ", "negative": "Sure! No worries, whenever you want this info, just ask me here."
       },
       {
@@ -90,8 +92,8 @@ Here with **DAO questions**? Plz send a DM to @krrisis or @griffgreen - they’l
 
   // COMMUNICATIONS
   "!mbUGUXUxvuGxvjQJtL:matrix.org": {
-    "externalMsg": "Welcome %USER% to the Communications room! Feel free to introduce yourself or ask any question! If you have any specific communication skills and want to help out, make sure to add your details [here](http://bit.ly/GivethMaker)",
-    "internalMsg": "Hey %USER%, welcome to the Communications room! If you want to actively participate and help us Build the Future of Giving make sure to join our Communications Circle Meeting [here](https://meet.jit.si/giveth-communication). This normally takes place every Wednesday at 5PM CET and is announced in the room."
+    "externalMsg": "Welcome %USER% to the Communications room! Feel free to introduce yourself or ask any question! I’ve also sent you a direct message with more info.",
+    "internalMsg": "Hey %USER%, welcome to the Communications room! If you want to actively participate and help us Build the Future of Giving make sure to join our Communications Circle Meeting [here](https://meet.jit.si/giveth-communication). This normally takes place every Wednesday at 5PM CET and is announced in the room. If you have any specific communication skills and want to help out, make sure to add your details [here](http://bit.ly/GivethMaker)"
   },
 
 
@@ -103,21 +105,18 @@ Here with **DAO questions**? Plz send a DM to @krrisis or @griffgreen - they’l
 
   // DApp DEVELOPMENT
   "!pJNSuPMvcrDttmJFvV:matrix.org": {
-    "internalMsg": "It seems that you have just joined DApp Development channel! Here are some links to get you started.\
-      \
-      If you want to better understand what we are building:\
-      The DApp [Product Definition](https://wiki.giveth.io/documentation/DApp/product-definition/) on our Wiki\
-      Our [Development Roadmap](https://wiki.giveth.io/documentation/product-roadmap/)\
-      [Medium posts](https://medium.com/giveth)\
-      \
-      If you want to actively participate\
-      See our fundraising [DApp development campaign](https://alpha.giveth.io/campaigns/fzOahNwFVyY7qLTI) on the DApp\
-      Checkout our DApp Github page and don’t hesitate to pick on of the help [wanted issues](https://github.com/Giveth/giveth-dapp/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)\
-      Our [Giveth Google Drive workspace](https://drive.google.com/drive/folders/0B2gzflwFITCBNGtDRHIyakJiaTA)\
-      And all the events we are attending in our [calendar](https://calendar.google.com/calendar/embed?src=givethdotio%40gmail) most notably the DApp team meeting happening every Wednesday at 20:00 on https://meet.jit.si/giveth-devteam\
-      \
-      If you want to understand how we work\
-      Check out our [DApp Github page](https://github.com/giveth/giveth-dapp) and don’t hesitate to pick on of the [help wanted](https://github.com/Giveth/giveth-dapp/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22) issues\\"
+    "internalMsg": "It seems that you have just joined DApp Development channel! Here are some links to get you started.\n\
+      \n\
+      If you want to better understand what we are building:\n\
+      \n* The DApp [Product Definition](https://wiki.giveth.io/documentation/DApp/product-definition/) on our Wiki\n\
+      \n* Our [Development Roadmap](https://wiki.giveth.io/documentation/product-roadmap/)\n\
+      \n* [Medium posts](https://medium.com/giveth)\n\
+      \n\
+      If you want to actively participate:\n\
+      \n* See our fundraising [DApp development campaign](https://alpha.giveth.io/campaigns/fzOahNwFVyY7qLTI) on the DApp\n\
+      \n* Checkout our DApp Github page and don’t hesitate to pick on of the ['help wanted'](https://github.com/Giveth/giveth-dapp/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22) issues\n\
+      \n* Our [Giveth Google Drive workspace](https://drive.google.com/drive/folders/0B2gzflwFITCBNGtDRHIyakJiaTA)\n\
+      \n* Check out the events we are attending or organizing in our [calendar](https://calendar.google.com/calendar/embed?src=givethdotio%40gmail) most notably the DApp team meeting happening every Wednesday at 20:00 on https://meet.jit.si/giveth-devteam"
   }
 };
 
