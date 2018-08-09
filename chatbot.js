@@ -15,7 +15,7 @@ exports.handleNewMember = function (event, state, member, client) {
 
   var roomMessages = messages[state.roomId];
 
-  if (roomMessages) {
+  if (roomMessages && checkUser(user)) {
     handleWelcome(state, user, client, roomMessages.externalMsg, roomMessages.internalMsg);
   }
 };
@@ -25,62 +25,70 @@ exports.handleResponse = function (event, room, toStartOfTimeline, client) {
     var msg = event.getContent().body;
     const user = event.getSender();
 
-    if (privateRooms[user] && privateRooms[user].welcoming && user != client.credentials.userId && room.roomId == privateRooms[user].room) {
+    if (checkUser(user)) {
 
-      var greetingQuestions = messages[privateRooms[user].welcoming.room].internalMsg;
-      var curQuestion = privateRooms[user].welcoming.curQuestion;
+      if (privateRooms[user] && privateRooms[user].welcoming && user != client.credentials.userId && room.roomId == privateRooms[user].room) {
 
-      var positive = false;
-      var negative = false;
-      for (var p = 0; p < positiveResponses.length; p++) {
-        if (msg.includes(positiveResponses[p].toLowerCase())) {
-          positive = true;
-          break;
-        }
-      }
+        var greetingQuestions = messages[privateRooms[user].welcoming.room].internalMsg;
+        var curQuestion = privateRooms[user].welcoming.curQuestion;
 
-      for (var n = 0; n < negativeResponses.length; n++) {
-        if (msg.includes(negativeResponses[n].toLowerCase())) {
-          negative = true;
-          break;
-        }
-      }
-
-      if (positive) {
-        sendInternalMessage(greetingQuestions[curQuestion].positive, user, client);
-      } else if (negative) {
-        sendInternalMessage(greetingQuestions[curQuestion].negative, user, client);
-      }
-
-      if (positive || negative) {
-        if (greetingQuestions.length > curQuestion + 1) {
-          sendNextQuestion(curQuestion, greetingQuestions, user, client, privateRooms[user].welcoming.room);
-        } else {
-          privateRooms[user].welcoming = undefined;
-        }
-      } else {
-        sendInternalMessage("I didn't recognize that response :(", user, client);
-      }
-    } else if ((!privateRooms[user] || !privateRooms[user].welcoming) && user != client.credentials.userId) {
-      if (privateRooms[user] && privateRooms[user].room == room.roomId) {
-        for (var key in questions) {
-          if (questions.hasOwnProperty(key) && checkForRoomQuestions(msg, key, room.roomId, user, client)) {
+        var positive = false;
+        var negative = false;
+        for (var p = 0; p < positiveResponses.length; p++) {
+          if (msg.includes(positiveResponses[p].toLowerCase())) {
+            positive = true;
             break;
           }
         }
-      } else {
-        checkForRoomQuestions(msg, room.roomId, room.roomId, user, client);
+
+        for (var n = 0; n < negativeResponses.length; n++) {
+          if (msg.includes(negativeResponses[n].toLowerCase())) {
+            negative = true;
+            break;
+          }
+        }
+
+        if (positive) {
+          sendInternalMessage(greetingQuestions[curQuestion].positive, user, client);
+        } else if (negative) {
+          sendInternalMessage(greetingQuestions[curQuestion].negative, user, client);
+        }
+
+        if (positive || negative) {
+          if (greetingQuestions.length > curQuestion + 1) {
+            sendNextQuestion(curQuestion, greetingQuestions, user, client, privateRooms[user].welcoming.room);
+          } else {
+            privateRooms[user].welcoming = undefined;
+          }
+        } else {
+          sendInternalMessage("I didn't recognize that response :(", user, client);
+        }
+      } else if ((!privateRooms[user] || !privateRooms[user].welcoming) && user != client.credentials.userId) {
+        if (privateRooms[user] && privateRooms[user].room == room.roomId) {
+          for (var key in questions) {
+            if (questions.hasOwnProperty(key) && checkForRoomQuestions(msg, key, room.roomId, user, client)) {
+              break;
+            }
+          }
+        } else {
+          checkForRoomQuestions(msg, room.roomId, room.roomId, user, client);
+        }
       }
-    }
-  } else if (event.getType() === "m.room.member" && event.event.membership === "leave") {
-    var privateRoom = privateRooms[event.getSender()];
-    if (privateRoom && privateRoom.room == event.event.room_id) {
-      privateRoom.room = undefined;
-      privateRoom.welcoming = undefined;
-      savePrivateRooms();
+    } else if (event.getType() === "m.room.member" && event.event.membership === "leave") {
+      var privateRoom = privateRooms[event.getSender()];
+      if (privateRoom && privateRoom.room == event.event.room_id) {
+        privateRoom.room = undefined;
+        privateRoom.welcoming = undefined;
+        savePrivateRooms();
+      }
     }
   }
 };
+
+function checkUser(user) {
+  // Ignore Slack bridge users
+  return !user.startsWith("slack_giveth_");
+}
 
 function checkForRoomQuestions(msg, roomForQuestions, roomToSendIn, user, client) {
   var questionsForRoom = questions[roomForQuestions];
