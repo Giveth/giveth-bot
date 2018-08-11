@@ -47,7 +47,8 @@ module.exports.messages = {
   "!vwFGsktMNkdorFWJRi:matrix.org": {
     "externalMsg": "Welcome %USER% to Giveth! Feel free to introduce yourself or ask any question! You can find an overview of all our rooms here: [x](https://riot.im/app/#/group/+giveth:matrix.org), I also sent you a direct message with more info.",
     "internalMsg": [
-      { "msg": "Hey %USER%, welcome to Giveth!! First a few tips if you are a new Riot user:\n\
+      {
+        "msg": "Hey %USER%, welcome to Giveth!! First a few tips if you are a new Riot user:\n\
       \n* [Download Riot](https://about.riot.im/downloads/) on your device for quick and easy access\n\
       \n* Limit notifications per room [by changing it](https://about.riot.im/need-help/#rooms-section) to mentions only" },
       {
@@ -122,9 +123,16 @@ module.exports.messages = {
 
 module.exports.questions = {
   // SOCIAL CODING
-  /**"!kUeYRcrXObgGoJlFjn:matrix.org": [
-
-  ],**/
+  "!kUeYRcrXObgGoJlFjn:matrix.org": [
+    {
+      "trigger": ["Blockternship", "Project I can work on", "I’m here for the hackathon"],
+      "answer": "Be sure to join the #blockternship:matrix.org room to connect with the #Builders :-)"
+    },
+    {
+      "trigger": ["When is the next", "Meeting", "Social Coding Sync"],
+      "answer": "The Social Coding Sync is every other week on Tuesday at 06.00PM CE(S)T,  09:00 PDT, 04:00PM GMT) right [here](https://meet.jit.si/socialcoding)"
+    }
+  ],
 
   // GENERAL
   "!vwFGsktMNkdorFWJRi:matrix.org": [
@@ -164,8 +172,8 @@ module.exports.questions = {
   // COMMUNITIES
   "!FBZLHmkNLmabnszigV:matrix.org": [
     {
-      "trigger": ["be a tester", "test the dapp"],
-      "answer": "Great news! @vojtech:matrix.org will be in touch! If he isn’t, stalk him :-)"
+      "trigger": ["I want to be a tester", "I want to test the dapp", "how can I test"],
+      "answer": "Great that you want to test the DApp with us! @vojtech:matrix.org will be in touch! If he isn’t, stalk him :-)"
     },
     {
       "trigger": "form for communities",
@@ -176,12 +184,12 @@ module.exports.questions = {
   // COMMUNICATIONS
   "!mbUGUXUxvuGxvjQJtL:matrix.org": [
     {
-      "trigger": "join the Communication Meeting",
+      "trigger": ["join the Communication Meeting", "join the comms meeting", "join our comms meeting", "Weekly Comms Circle meeting in"],
       "answer": "The Comms meeting takes place on Wednesday at 05.00PM CE(S)T, (= 11AM EDT - 04PM UTC/GMT+1 -- 8AM PT -- 10PM ICT) - Join us [here](https://meet.jit.si/giveth-communication)"
     },
     {
-      "trigger": "Comms Meeting notes",
-      "answer": "All Communication Circle meeting notes can be found [here](https://drive.google.com/open?id=15Lohfdi7UuZU-TL-ajltY2kPEc2fTrDF)"
+      "trigger": ["Comms Meeting notes", "Our meeting notes"],
+      "answer": "All Communication Circle meeting notes can be found [here](https://github.com/Giveth/Communication) in the form of issues - if you want to view these in a more ordered and visual form, please install the zenhub extension first (see link on the homepage)"
     }
   ],
 
@@ -189,7 +197,7 @@ module.exports.questions = {
   "!qsjCsmTVnObJyCZkqq:matrix.org": [
     {
       "trigger": "join the Governance Meeting",
-      "answer": "The Governance meeting takes place on Thursday at 06.00PM CE(S)T, (= 12PM EDT - 05PM UTC/GMT+1 -- 9AM PT -- 11PM ICT) - Join us [here](https://meet.jit.si/giveth-communication)"
+      "answer": "The Governance meeting takes place on Thursday at 06.00PM CE(S)T, (= 12PM EDT - 05PM UTC/GMT+1 -- 9AM PT -- 11PM ICT) - Join us [here](https://meet.jit.si/giveth-gov)"
     }
   ]
 
