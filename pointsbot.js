@@ -6,7 +6,7 @@ const { google } = require("googleapis");
 exports.handlePointGiving = function (auth, event, room, toStartOfTimeline, client) {
   if (event.getType() === "m.room.message" && toStartOfTimeline === false) {
     client.setPresence("online");
-    var message = event.getContent().body;
+    let message = event.getContent().body;
     const roomId = room.roomId;
 
     if (message[1] === " ") {
