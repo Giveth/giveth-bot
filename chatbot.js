@@ -87,7 +87,7 @@ exports.handleResponse = function (event, room, toStartOfTimeline, client) {
 
 function checkUser(user) {
   // Ignore Slack bridge users
-  return !user.startsWith("slack_giveth_");
+  return !user.startsWith("@slack_giveth_");
 }
 
 function checkForRoomQuestions(msg, roomForQuestions, roomToSendIn, user, client) {
