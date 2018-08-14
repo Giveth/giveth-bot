@@ -31,12 +31,16 @@ function handleDish(event, room, client, auth) {
   if (event.getSender() == `@${process.env.BOT_USER}:matrix.org`) { // we sent the message.
     return;
   }
+  if (event.getContent().formatted_body) {
+    message = event.getContent().formatted_body;
+  }
   if (message.trim()[0] == ">") { //quoting another user, skip the quoted part
     matched = true;
     message = message.split("\n\n")[1];
   }
 
-  const re = /!\s*dish\s+(\S+)\s+(\S+)\s+points\s+to\s+(\S+)\s+for\s+([^\n]+)/gi;
+
+  const re = /!\s*dish\s+(\S+)\s+(\S+)\s+points\s+to\s+([^\n]+)\s+for\s+([^\n]+)/gi;
   let match;
   do {
     match = re.exec(message);
@@ -138,6 +142,11 @@ either add this user to the room, or try again using the format @[userId]:[domai
 
 // Try to intelligently format the receiver field
 function findReceiver(room, receiver) {
+
+  if (receiver.startsWith("<a href=\"https://matrix.to/#/")) {
+    receiver = receiver.substring(29, receiver.indexOf("\">"));
+  }
+
   if (receiver[0] != "@") {
     receiver = `@${receiver}`;
   }
