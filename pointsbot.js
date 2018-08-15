@@ -9,6 +9,7 @@ exports.handlePointGiving = function (auth, event, room, toStartOfTimeline, clie
     let message = event.getContent().body;
     const roomId = room.roomId;
 
+    // Support for "! dish" command
     if (message[1] === " ") {
       message = message.replace(" ", "");
     }
