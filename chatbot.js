@@ -34,19 +34,21 @@ exports.handleResponse = function (event, room, toStartOfTimeline, client) {
 
         let positive = false;
         let negative = false;
-        for (let p = 0; p < positiveResponses.length; p++) {
-          if (msg.includes(positiveResponses[p].toLowerCase())) {
+        positiveResponses.some(response => {
+          if (msg.includes(response.toLowerCase())) {
             positive = true;
-            break;
+            return true;
           }
-        }
+          return false;
+        });
 
-        for (let n = 0; n < negativeResponses.length; n++) {
-          if (msg.includes(negativeResponses[n].toLowerCase())) {
+        negativeResponses.some(response => {
+          if (msg.includes(response.toLowerCase())) {
             negative = true;
-            break;
+            return true;
           }
-        }
+          return false;
+        });
 
         if (positive) {
           sendInternalMessage(greetingQuestions[curQuestion].positive, user, client);
@@ -93,24 +95,25 @@ function checkUser(user) {
 function checkForRoomQuestions(msg, roomForQuestions, roomToSendIn, user, client) {
   let questionsForRoom = questions[roomForQuestions];
   if (questionsForRoom) {
-    for (let i = 0; i < questionsForRoom.length; i++) {
-      let question = questionsForRoom[i];
+    questionsForRoom.forEach(question => {
       let shouldAnswerQuestion = false;
       if (typeof question.trigger === "string") {
         shouldAnswerQuestion = msg.toLowerCase().includes(question.trigger.toLowerCase());
       } else {
-        for (let t = 0; t < question.trigger.length; t++) {
-          if (msg.toLowerCase().includes(question.trigger[t].toLowerCase())) {
+        question.trigger.some(trigger => {
+          if (msg.toLowerCase().includes(trigger.toLowerCase())) {
             shouldAnswerQuestion = true;
-            break;
+            return true;
           }
-        }
+          return false;
+        });
       }
       if (shouldAnswerQuestion) {
         sendMessage(question.answer, user, client, roomToSendIn);
         return true;
       }
-    }
+    });
+
   }
   return false;
 }
