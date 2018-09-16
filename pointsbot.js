@@ -41,7 +41,7 @@ function handleDish(event, room, client, auth) {
   }
 
 
-  const re = /!\s*dish\s+(\S+)\s+(\S+)\s+points\s+to\s+([^\n]+)\s+for\s+([^\n]+)/gi;
+  const re = /!\s*dish\s+(\S+)\s+(\S+)\s+points\s+to\s+(\S+)\s+for\s+([^\n]+)/gi;
   let match;
   do {
     match = re.exec(message);
