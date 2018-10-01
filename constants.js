@@ -39,7 +39,7 @@ module.exports.messages = {
   "!kUeYRcrXObgGoJlFjn:matrix.org": {
     "internalMsg": "Now that you’re in Social Coding there are a few resources that will help you along the way:\
     [What are points](https://medium.com/giveth/how-rewarddao-works-aka-what-are-points-7388f70269a) and [What is Social Coding](https://medium.com/giveth/what-is-social-coding-fa81feacfa32).\
-   if you have any questions that are not covered in the literature please reach out to @Quazia or @YalorMewn and they will happily follow up with you in 24-48 hours",
+   if you have any questions that are not covered in the literature please reach out to @parker_williams:matrix.org or @yalormewn:matrix.org and they will happily follow up with you in 24-48 hours",
     "externalMsg": "Welcome %USER% to Social Coding where your pragma can roam the wild steppe of the blockchain world. I’ve also sent you a direct message with more info."
   },
 
@@ -125,12 +125,12 @@ module.exports.questions = {
   // SOCIAL CODING
   "!kUeYRcrXObgGoJlFjn:matrix.org": [
     {
-      "trigger": ["Blockternship", "Project I can work on", "I’m here for the hackathon"],
-      "answer": "Be sure to join the #blockternship:matrix.org room to connect with the #Builders :-)"
+      "trigger": ["Blockternship", "Project I can work on", "hackathon"],
+      "answer": "Be sure to join the #blockternship:matrix.org room to connect with the #Buidlers :-)"
     },
     {
-      "trigger": ["When is the next", "Meeting", "Social Coding Sync"],
-      "answer": "The Social Coding Sync is every other week on Tuesday at 06.00PM CE(S)T,  09:00 PDT, 04:00PM GMT) right [here](https://meet.jit.si/socialcoding)"
+      "trigger": ["When is the next", "Sync", "Sync Meeting", "Social Coding Sync"],
+      "answer": "The Social Coding Sync is every other week on Tuesday at 05.00PM CE(S)T,  08:00 PST, 03:00PM GMT) right [here](https://meet.jit.si/socialcoding)"
     }
   ],
 
