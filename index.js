@@ -89,16 +89,9 @@ function authenticated(auth) {
       });
 
       client.on("Room.timeline", (event, room, toStartOfTimeline) => {
+        chatBot.handleNewMember(event, room, toStartOfTimeline, client);
         pointsBot.handlePointGiving(auth, event, room, toStartOfTimeline, client);
         chatBot.handleResponse(event, room, toStartOfTimeline, client);
-      });
-
-      client.once("sync", (syncState) => {
-        if (syncState === "PREPARED") {
-          client.on("RoomState.newMember", (event, state, member) => {
-            chatBot.handleNewMember(event, state, member, client);
-          });
-        }
       });
 
       client.startClient(0);

@@ -10,13 +10,15 @@ fs.readFile("./privateRooms.json", "utf8", function (err, data) {
   }
 });
 
-exports.handleNewMember = function (event, state, member, client) {
-  const user = member.userId;
+exports.handleNewMember = function (event, room, toStartOfTimeline, client) {
+  if (event.event.membership === "join") {
+    const user = event.getSender();
 
-  let roomMessages = messages[state.roomId];
+    let roomMessages = messages[event.getRoomId()];
 
-  if (roomMessages && checkUser(user)) {
-    handleWelcome(state, user, client, roomMessages.externalMsg, roomMessages.internalMsg);
+    if (roomMessages && checkUser(user)) {
+      handleWelcome(state, user, client, roomMessages.externalMsg, roomMessages.internalMsg);
+    }
   }
 };
 
