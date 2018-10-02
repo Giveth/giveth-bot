@@ -13,11 +13,12 @@ fs.readFile("./privateRooms.json", "utf8", function (err, data) {
 exports.handleNewMember = function (event, room, toStartOfTimeline, client) {
   if (event.event.membership === "join") {
     const user = event.getSender();
+    const room = event.getRoomId();
 
-    let roomMessages = messages[event.getRoomId()];
+    let roomMessages = messages[room];
 
     if (roomMessages && checkUser(user)) {
-      handleWelcome(state, user, client, roomMessages.externalMsg, roomMessages.internalMsg);
+      handleWelcome(room, user, client, roomMessages.externalMsg, roomMessages.internalMsg);
     }
   }
 };
@@ -120,15 +121,15 @@ function checkForRoomQuestions(msg, roomForQuestions, roomToSendIn, user, client
   return false;
 }
 
-function handleWelcome(state, user, client, externalMsg, internalMsg) {
+function handleWelcome(room, user, client, externalMsg, internalMsg) {
   if (typeof externalMsg === "string") {
-    sendMessage(externalMsg, user, client, state.roomId);
+    sendMessage(externalMsg, user, client, room);
   }
   if (typeof internalMsg === "string") {
     sendInternalMessage(internalMsg, user, client);
   } else if (typeof internalMsg === "object") {
     if (!privateRooms[user] || (privateRooms[user] && !privateRooms[user].welcoming)) {
-      sendNextQuestion(-1, internalMsg, user, client, state.roomId);
+      sendNextQuestion(-1, internalMsg, user, client, room);
     }
   }
 }
