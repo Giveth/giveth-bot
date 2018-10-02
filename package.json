@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "GPL-3.0",
   "scripts": {
+    "test": "eslint index.js pointsbot.js chatbot.js constants.js",
     "start": "node index"
   },
   "dependencies": {
