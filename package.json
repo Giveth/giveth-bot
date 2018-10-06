@@ -5,7 +5,8 @@
   "license": "GPL-3.0",
   "scripts": {
     "test": "eslint index.js pointsbot.js chatbot.js constants.js",
-    "start": "node index"
+    "start": "node index",
+    "serve": "pm2 startOrRestart ecosystem.config.js --env production"
   },
   "dependencies": {
     "bignumber.js": "^7.0.1",
