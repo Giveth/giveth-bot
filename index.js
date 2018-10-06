@@ -69,34 +69,40 @@ function getNewToken(oAuth2Client, callback) {
 const client = sdk.createClient("https://matrix.org");
 
 function authenticated(auth) {
-  client.login(
-    "m.login.password",
-    {
-      user: process.env.BOT_USER,
-      password: process.env.BOT_PASSWORD
-    },
-    (err, data) => {
-      if (err) {
-        console.log("Error:", err);
+  fs.readFile("bot_credentials.json", (err, content) => {
+    if (err) return console.log("Error loading bot credentials", err);
+
+    content = JSON.parse(content);
+
+    client.login(
+      "m.login.password",
+      {
+        user: content.username,
+        password: content.password
+      },
+      (err, data) => {
+        if (err) {
+          console.log("Error:", err);
+        }
+
+        console.log(`Logged in ${data.user_id} on device ${data.device_id}`);
+        const client = sdk.createClient({
+          baseUrl: "https://matrix.org",
+          accessToken: data.access_token,
+          userId: data.user_id,
+          deviceId: data.device_id
+        });
+
+        client.on("Room.timeline", (event, room, toStartOfTimeline) => {
+          chatBot.handleNewMember(event, room, toStartOfTimeline, client);
+          pointsBot.handlePointGiving(auth, event, room, toStartOfTimeline, client);
+          chatBot.handleResponse(event, room, toStartOfTimeline, client);
+        });
+
+        client.startClient(0);
       }
-
-      console.log(`Logged in ${data.user_id} on device ${data.device_id}`);
-      const client = sdk.createClient({
-        baseUrl: "https://matrix.org",
-        accessToken: data.access_token,
-        userId: data.user_id,
-        deviceId: data.device_id
-      });
-
-      client.on("Room.timeline", (event, room, toStartOfTimeline) => {
-        chatBot.handleNewMember(event, room, toStartOfTimeline, client);
-        pointsBot.handlePointGiving(auth, event, room, toStartOfTimeline, client);
-        chatBot.handleResponse(event, room, toStartOfTimeline, client);
-      });
-
-      client.startClient(0);
-    }
-  );
+    );
+  });
 }
 
 // Zeit NOW workaround
