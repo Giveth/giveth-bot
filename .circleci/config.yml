@@ -45,7 +45,7 @@ jobs:
       - run:
           name: Production Deploy
           command: |
-            ssh -o "StrictHostKeyChecking no" deploy@95.85.4.133 'cd giveth-bot/ && git pull && npm install && pm2 startOrRestart ecosystem.config.js --env production --node-args "BOT_USER='$BOT_USERNAME' BOT_PASSWORD='$BOT_PASSWORD'";'
+            ssh -o "StrictHostKeyChecking no" deploy@95.85.4.133 'cd giveth-bot/ && git pull && npm install && pm2 startOrRestart ecosystem.config.js --env production;'
 
 workflows:
   version: 2
