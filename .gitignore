@@ -1,6 +1,7 @@
 node_modules
 yarn.lock
 client_secret.json
+bot_credentials.json
 credentials.json
 package-lock.json
 privateRooms.json

@@ -4,19 +4,15 @@ A matrix bot that handles everything from information to point dishing for the G
 
 ## Development
 1. Follow [this](https://developers.google.com/sheets/api/quickstart/nodejs) guide to get `client_secret.json`.
-2. Install cross-env globally: `npm i -g cross-env`.
-3. install dependenceis: `npm install`
-4. Create a matrix account using [riot.im](https://riot.im/app/)
-5. Start the bot with following parameters: `cross-env BOT_USER="YOUR_BOT_USER_NAME" BOT_PASSWORD="YOUR_BOT_PASSWORD" node index`
+2. install dependencies: `npm install`
+3. Create a matrix account using [riot.im](https://riot.im/app/)
+4. Create a `bot_credentials.json` file containing the username and password of the bot in JSON format.
+5. Simply start the bot using: `node index`
 
 ## Production
-Zeit.co NOW is being used to host the bot.
+The bot is automatically deployed to Digital Ocean using Circle CI.
 
-`client_secret.json` and `credentials.json` are required files.
-
-Remove both files from `.gitignore`.
-
-You can run `now -e BOT_USER="name" -e BOT_PASSWORD="password" -e NODE_ENV="production"` to deploy the bot.
+`client_secret.json`, `bot_credentials.json` and `credentials.json` are required files.
 
 ## Usage
 Invite your bot to a room and use one of the folowing commands:
@@ -25,4 +21,4 @@ Invite your bot to a room and use one of the folowing commands:
 * `!sheet` to see the current [rewardDAO](https://medium.com/giveth/how-rewarddao-works-aka-what-are-points-7388f70269a) sheet
 
 Pull requests are welcome!
-Please run `eslint index.js` before submitting a PR to ensure that you have not introduced any errors.
+Please run `npm test` before submitting a PR to ensure that you have not introduced any errors.
