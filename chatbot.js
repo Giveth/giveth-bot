@@ -11,7 +11,7 @@ fs.readFile("./privateRooms.json", "utf8", function (err, data) {
 });
 
 exports.handleNewMember = function (event, room, toStartOfTimeline, client) {
-  if (event.event.membership === "join") {
+  if (event.event.membership === "join" && (!event.event.unsigned.prev_content || event.event.unsigned.prev_content.membership === "invite")) {
     const user = event.getSender();
     const room = event.getRoomId();
 
