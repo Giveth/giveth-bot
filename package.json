@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "GPL-3.0",
   "scripts": {
-    "test": "eslint index.js pointsbot.js chatbot.js constants.js",
+    "test": "eslint .",
+    "lint:fix": "eslint . --fix",
     "start": "node index"
   },
   "dependencies": {
@@ -15,6 +16,9 @@
     "matrix-js-sdk": "^0.10.2"
   },
   "devDependencies": {
-    "eslint": "^5.6.1"
+    "eslint": "^5.6.1",
+    "eslint-config-prettier": "^3.1.0",
+    "eslint-plugin-prettier": "^3.0.0",
+    "prettier": "^1.14.3"
   }
 }
