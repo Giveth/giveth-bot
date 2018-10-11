@@ -87,11 +87,11 @@ module.exports.messages = {
   // CONTRIBUTORS
   '!OQTaDMKEJXLvTpYoCe:matrix.org': {
     externalMsg:
-      'Welcome %USER% to the Contributors room! Feel free to introduce yourself or ask any question! If you want to help us build out the Giveth Galaxy, make sure to add your details [here](http://bit.ly/GivethMaker). I also sent you a direct message with some more info. ',
+      'Welcome %USER% to the Contributors room! Feel free to introduce yourself or ask any question! If you want to help us build out the Giveth Galaxy, make sure to add your details in the Maker form I just sent you, together with some extra info!',
     internalMsg: [
       {
         msg:
-          'Hey %USER%, welcome to the Contributors room! If you didn’t have time yet to fill out this [document](http://bit.ly/GivethMaker), you should! Even if you don’t have time right now, we might meet in the future! Every month Giveth Gives … eth! If you want to learn more about how you can earn some too, read [this article](https://medium.com/giveth/how-rewarddao-works-aka-what-are-points-7388f70269a).',
+          'Hey %USER%, welcome to the Contributors room! Please fill out this [document](http://bit.ly/GivethMaker) if you want to build out the Giveth Galaxy with us. Even if you don’t have time right now, we might meet in the future! Every month Giveth Gives … eth! If you want to learn more about how you can earn some too, read [this article](https://medium.com/giveth/how-rewarddao-works-aka-what-are-points-7388f70269a).',
       },
       {
         msg:
@@ -106,11 +106,11 @@ module.exports.messages = {
   // COMMUNITIES
   '!FBZLHmkNLmabnszigV:matrix.org': {
     externalMsg:
-      'Welcome %USER% to the Communities room! Feel free to introduce yourself or ask any question! If you want to help us test the DApp releases, please let us know right here! If you want to be or help us build one of the first Communities (DACs) or Campaigns on the DApp, please take a minute and fill out this [form](http://bit.ly/GivethCommunity)!',
+      'Welcome %USER% to the Communities room! Feel free to introduce yourself or ask any question! If you want to help us test the DApp releases, please let us know right here! If you want to be or help us build one of the first Communities (DACs) or Campaigns on the DApp, please introduce yourself here and take a minute to fill out the form I just sent you!',
     internalMsg: [
       {
         msg:
-          'Hey %USER%, welcome to the Communities room! If you didn’t have time yet to fill out this [document](http://bit.ly/GivethCommunity), you should!',
+          'Hey %USER%, welcome to the Communities room! Take a minute to fill out this [document](http://bit.ly/GivethCommunity), so we know who you are and how we can help you create a Community on the DApp!',
       },
     ],
   },
