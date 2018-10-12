@@ -118,7 +118,9 @@ function tryDish(event, room, client, auth, nPoints, type, users, reason) {
 
     users = users.split(',')
 
-    users.forEach(user => {
+    const sheets = google.sheets({ version: 'v4', auth })
+
+    users.forEach((user, idx) => {
       user = user.trim()
       let { userInRoom, receiver, display_name, multipleUsers } = findReceiver(
         room,
@@ -161,22 +163,23 @@ either add this user to the room, or try again using the format @[userId]:[domai
         ],
       ]
       const body = { values }
-      const sheets = google.sheets({ version: 'v4', auth })
-      sheets.spreadsheets.values.append(
-        {
-          spreadsheetId: sheet_id,
-          range: sheet_tab_name,
-          valueInputOption: 'USER_ENTERED',
-          resource: body,
-        },
-        err => {
-          if (err) return console.log('The API returned an error: ' + err)
-          client.sendTextMessage(
-            room.roomId,
-            `${sender} dished ${amount} ${type} points to ${receiver}`
-          )
-        }
-      )
+      setTimeout(() => {
+        sheets.spreadsheets.values.append(
+          {
+            spreadsheetId: sheet_id,
+            range: sheet_tab_name,
+            valueInputOption: 'USER_ENTERED',
+            resource: body,
+          },
+          err => {
+            if (err) return console.log('The API returned an error: ' + err)
+            client.sendTextMessage(
+              room.roomId,
+              `${sender} dished ${amount} ${type} points to ${receiver}`
+            )
+          }
+        )
+      }, idx * 500)
     })
   } catch (err) {
     const MANUAL_ERROR_CODES = [
