@@ -31,7 +31,7 @@ exports.handlePointGiving = function(
     if (command == '!help') {
       client.sendTextMessage(
         roomId,
-        'dish points using the following format:\n!dish [#of points] [type of points] points to [handle] for [reason]'
+        'dish points using the following format:\n!dish [#of points] [type of points] points to [handle, handle, handle] for [reason]'
       )
     } else if (command == '!dish') {
       handleDish(event, room, client, auth)
@@ -47,7 +47,7 @@ exports.handlePointGiving = function(
 function handleDish(event, room, client, auth) {
   let message = event.getContent().body
   let matched = false
-  let regex = /!\s*dish\s+(\S+)\s+(\S+)\s+points\s+to\s+(\S+)\s+for\s+([^\n]+)/gi
+  let regex = /!\s*dish\s+(\S+)\s+(\S+)\s+points\s+to\s+(.+?)\s+for\s+([^\n]+)/gi
 
   if (event.getSender() == `@${process.env.BOT_USER}:matrix.org`) {
     // we sent the message.
@@ -55,7 +55,6 @@ function handleDish(event, room, client, auth) {
   }
   if (event.getContent().formatted_body) {
     message = event.getContent().formatted_body
-    regex = /!\s*dish\s+(\S+)\s+(\S+)\s+points\s+to\s+([^\n]+)\s+for\s+([^\n]+)/gi
   }
   if (message.trim()[0] == '>') {
     // quoting another user, skip the quoted part
@@ -67,28 +66,19 @@ function handleDish(event, room, client, auth) {
   do {
     match = regex.exec(message)
     if (match) {
-      tryDish(
-        event,
-        room,
-        client,
-        auth,
-        match[1],
-        match[2],
-        match[3].trim(),
-        match[4]
-      )
+      tryDish(event, room, client, auth, match[1], match[2], match[3], match[4])
       matched = true
     }
   } while (match)
   if (!matched) {
     client.sendTextMessage(
       room.roomId,
-      'ERROR, please use the following format:\n!dish [#of points] [type of points] points to [handle] for [reason]'
+      'ERROR, please use the following format:\n!dish [#of points] [type of points] points to [handle, handle, handle] for [reason]'
     )
   }
 }
 
-function tryDish(event, room, client, auth, nPoints, type, user, reason) {
+function tryDish(event, room, client, auth, nPoints, type, users, reason) {
   try {
     const sender = event.getSender()
     const amount = new BigNumber(nPoints)
@@ -126,63 +116,68 @@ function tryDish(event, room, client, auth, nPoints, type, user, reason) {
       throw typeError
     }
 
-    let { userInRoom, receiver, display_name, multipleUsers } = findReceiver(
-      room,
-      user
-    ) // try to find user
+    users = users.split(',')
 
-    // handle github users
-    const BASE_GITHUB_URL = 'https://github.com/'
-    if (user.split(BASE_GITHUB_URL)[1]) {
-      receiver = user
-      ;(userInRoom = true), (multipleUsers = false)
-    }
+    users.forEach(user => {
+      user = user.trim()
+      let { userInRoom, receiver, display_name, multipleUsers } = findReceiver(
+        room,
+        user
+      ) // try to find user
 
-    if (multipleUsers) {
-      const userError = new Error(`There are multiple users with the name '${receiver}' in this room.
-please specify the domain name of the user using the format @[userId]:[domain]`)
-      userError.code = 'USER_MULTIPLE'
-      throw userError
-    }
-
-    if (!userInRoom) {
-      const userError = new Error(`Username '${receiver}' does not exist in this room.
-either add this user to the room, or try again using the format @[userId]:[domain]`)
-      userError.code = 'USER_DOES_NOT_EXIST'
-      throw userError
-    }
-    const date = dayjs().format('DD-MMM-YYYY')
-    const link = `https://riot.im/app/#/room/${room.roomId}/${event.getId()}`
-
-    const values = [
-      [
-        receiver,
-        sender,
-        reason,
-        amount.toFormat(2),
-        type,
-        date,
-        link,
-        display_name,
-      ],
-    ]
-    const body = { values }
-    const sheets = google.sheets({ version: 'v4', auth })
-    sheets.spreadsheets.values.append(
-      {
-        spreadsheetId: sheet_id,
-        range: sheet_tab_name,
-        valueInputOption: 'USER_ENTERED',
-        resource: body,
-      },
-      err => {
-        if (err) return console.log('The API returned an error: ' + err)
-        client.sendTextMessage(
-          room.roomId,
-          `${sender} dished ${amount} ${type} points to ${receiver}`
-        )
+      // handle github users
+      const BASE_GITHUB_URL = 'https://github.com/'
+      if (user.split(BASE_GITHUB_URL)[1]) {
+        receiver = user
+        ;(userInRoom = true), (multipleUsers = false)
       }
-    )
+
+      if (multipleUsers) {
+        const userError = new Error(`There are multiple users with the name '${receiver}' in this room.
+please specify the domain name of the user using the format @[userId]:[domain]`)
+        userError.code = 'USER_MULTIPLE'
+        throw userError
+      }
+
+      if (!userInRoom) {
+        const userError = new Error(`Username '${receiver}' does not exist in this room.
+either add this user to the room, or try again using the format @[userId]:[domain]`)
+        userError.code = 'USER_DOES_NOT_EXIST'
+        throw userError
+      }
+      const date = dayjs().format('DD-MMM-YYYY')
+      const link = `https://riot.im/app/#/room/${room.roomId}/${event.getId()}`
+
+      const values = [
+        [
+          receiver,
+          sender,
+          reason,
+          amount.toFormat(2),
+          type,
+          date,
+          link,
+          display_name,
+        ],
+      ]
+      const body = { values }
+      const sheets = google.sheets({ version: 'v4', auth })
+      sheets.spreadsheets.values.append(
+        {
+          spreadsheetId: sheet_id,
+          range: sheet_tab_name,
+          valueInputOption: 'USER_ENTERED',
+          resource: body,
+        },
+        err => {
+          if (err) return console.log('The API returned an error: ' + err)
+          client.sendTextMessage(
+            room.roomId,
+            `${sender} dished ${amount} ${type} points to ${receiver}`
+          )
+        }
+      )
+    })
   } catch (err) {
     const MANUAL_ERROR_CODES = [
       'POINTS_NOT_NUMBER',
@@ -201,7 +196,7 @@ either add this user to the room, or try again using the format @[userId]:[domai
     } else {
       client.sendTextMessage(
         room.roomId,
-        'ERROR, please use the following format:\n!dish [#of points] [type of points] points to [handle] for [reason]'
+        'ERROR, please use the following format:\n!dish [#of points] [type of points] points to [handle, handle, handle] for [reason]'
       )
     }
   }
