@@ -153,11 +153,6 @@ module.exports.questions = {
   // SOCIAL CODING
   '!kUeYRcrXObgGoJlFjn:matrix.org': [
     {
-      trigger: ['Blockternship', 'Project I can work on', 'hackathon'],
-      answer:
-        'Be sure to join the #blockternship:matrix.org room to connect with the #Buidlers :-)',
-    },
-    {
       trigger: [
         'When is the next',
         'Sync',
