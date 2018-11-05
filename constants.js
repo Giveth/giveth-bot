@@ -165,7 +165,7 @@ module.exports.questions = {
         'Social Coding Sync',
       ],
       answer:
-        'The Social Coding Sync is every other week on Tuesday at 05.00PM CE(S)T,  08:00 PST, 03:00PM GMT) right [here](https://meet.jit.si/socialcoding)',
+        'The Social Coding Sync is every other week on Tuesday at 06.00PM CE(S)T,  09:00 PST, 04:00PM GMT) right [here](https://meet.jit.si/socialcoding)',
     },
   ],
 
