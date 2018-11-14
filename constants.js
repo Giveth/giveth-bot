@@ -106,7 +106,7 @@ module.exports.messages = {
   // COMMUNITIES
   '!FBZLHmkNLmabnszigV:matrix.org': {
     externalMsg:
-      'Welcome %USER% to the Communities room! Feel free to introduce yourself or ask any question! If you want to help us test the DApp releases, please let us know right here! If you want to be or help us build one of the first Communities (DACs) or Campaigns on the DApp, please introduce yourself here and take a minute to fill out the form I just sent you!',
+      'Welcome %USER% to the Communities room! Feel free to introduce yourself or ask any question! If you want to be or help us build one of the first Communities (DACs) or Campaigns on the DApp, please introduce yourself here and take a minute to fill out the form I just sent you!',
     internalMsg: [
       {
         msg:
@@ -120,7 +120,7 @@ module.exports.messages = {
     externalMsg:
       'Welcome %USER% to the Communications room! Feel free to introduce yourself or ask any question! I’ve also sent you a direct message with more info.',
     internalMsg:
-      'Hey %USER%, welcome to the Communications room! If you want to actively participate and help us Build the Future of Giving make sure to join our Communications Circle Meeting [here](https://meet.jit.si/giveth-communication). This normally takes place every Wednesday at 5PM CET and is announced in the room. If you have any specific communication skills and want to help out, make sure to add your details [here](http://bit.ly/GivethMaker)',
+      'Hey %USER%, welcome to the Communications room! If you want to actively participate and help us Build the Future of Giving make sure to join our Communications Circle Meeting [here](https://meet.jit.si/giveth-communication). This normally takes place every Wednesday at 6PM CE(S)T and is announced in the room. If you have any specific communication skills and want to help out, make sure to add your details [here](http://bit.ly/GivethMaker)',
   },
 
   // GOVERNANCE
@@ -128,7 +128,7 @@ module.exports.messages = {
     externalMsg:
       'Welcome %USER% to the Governance room! Feel free to introduce yourself or ask any question',
     internalMsg:
-      'Hey %USER%, welcome to the Governance room! If you want to actively participate and help us Build the Future of Giving you are welcome to join our Governance Meeting [here](https://meet.jit.si/giveth-gov) . This normally takes place every Thursday at 5PM CET and is announced in the room.',
+      'Hey %USER%, welcome to the Governance room! If you want to actively participate and help us Build the Future of Giving you are welcome to join our Governance Meeting [here](https://meet.jit.si/giveth-gov) . This normally takes place every Thursday at 6PM CE(S)T and is announced in the room.',
   },
 
   // DApp DEVELOPMENT
@@ -233,7 +233,7 @@ module.exports.questions = {
         'Weekly Comms Circle meeting in',
       ],
       answer:
-        'The Comms meeting takes place on Wednesday at 05.00PM CE(S)T, (= 11AM EDT - 04PM UTC/GMT+1 -- 8AM PT -- 10PM ICT) - Join us [here](https://meet.jit.si/giveth-communication)',
+        'The Comms meeting takes place on Wednesday at 06.00PM CE(S)T, (= 12PM EDT - 05PM UTC - 09AM PT -- 12AM ICT) - Join us [here](https://meet.jit.si/giveth-communication)',
     },
     {
       trigger: ['Comms Meeting notes', 'Our meeting notes'],
