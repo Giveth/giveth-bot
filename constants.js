@@ -16,6 +16,8 @@ module.exports.point_types = [
   'SIGNALING',
 ]
 
+module.exports.reason_seperators = ['for', 'over', 'because']
+
 module.exports.domains = ['matrix.org', 'status.im', 'giveth.io', 'gitter.im']
 
 module.exports.max_points = 10000
