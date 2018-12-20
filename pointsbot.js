@@ -10,7 +10,7 @@ const {
 const BigNumber = require('bignumber.js')
 const { google } = require('googleapis')
 
-exports.handlePointGiving = function (
+exports.handlePointGiving = function(
   auth,
   event,
   room,
@@ -32,7 +32,9 @@ exports.handlePointGiving = function (
     if (command == '!help') {
       client.sendTextMessage(
         roomId,
-        'dish points using the following format:\n!dish [#of points] [type of points] points to [handle, handle, handle] [' + reason_seperators.toString().replace(/,/g, "/") + '] [reason]'
+        'dish points using the following format:\n!dish [#of points] [type of points] points to [handle, handle, handle] [' +
+          reason_seperators.toString().replace(/,/g, '/') +
+          '] [reason]'
       )
     } else if (command == '!dish') {
       handleDish(event, room, client, auth)
@@ -49,7 +51,12 @@ function handleDish(event, room, client, auth) {
   let message = event.getContent().body
   let matched = false
 
-  let regex = new RegExp('!\\s*dish\\s+(\\S+)\\s+(\\S+)\\s+points\\s+to\\s+(.+?)\\s+(' + reason_seperators.toString().replace(/,/g, "|") + ')\\s+([^\\n]+)', 'gi')
+  let regex = new RegExp(
+    '!\\s*dish\\s+(\\S+)\\s+(\\S+)\\s+points\\s+to\\s+(.+?)\\s+(' +
+      reason_seperators.toString().replace(/,/g, '|') +
+      ')\\s+([^\\n]+)',
+    'gi'
+  )
 
   if (event.getSender() == `@${process.env.BOT_USER}:matrix.org`) {
     // we sent the message.
@@ -133,7 +140,7 @@ function tryDish(event, room, client, auth, nPoints, type, users, reason) {
       const BASE_GITHUB_URL = 'https://github.com/'
       if (user.split(BASE_GITHUB_URL)[1]) {
         receiver = user
-          ; (userInRoom = true), (multipleUsers = false)
+        ;(userInRoom = true), (multipleUsers = false)
       }
 
       if (multipleUsers) {
