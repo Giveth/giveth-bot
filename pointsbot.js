@@ -47,7 +47,7 @@ exports.handlePointGiving = function(
 function handleDish(event, room, client, auth) {
   let message = event.getContent().body
   let matched = false
-  let regex = /!\s*dish\s+(\S+)\s+(\S+)\s+points\s+to\s+(.+?)\s+for\s+([^\n]+)/gi
+  let regex = /!\s*dish\s+(\S+)\s+(\S+)\s+>\s+(.+?)\s+#\s*([^\n]+)/gi
 
   if (event.getSender() == `@${process.env.BOT_USER}:matrix.org`) {
     // we sent the message.
@@ -73,7 +73,7 @@ function handleDish(event, room, client, auth) {
   if (!matched) {
     client.sendTextMessage(
       room.roomId,
-      'ERROR, please use the following format:\n!dish [#of points] [type of points] points to [handle, handle, handle] for [reason]'
+      'ERROR, please use the following format:\n!dish [#of points] [type of points] > [handle, handle, handle] #[reason]'
     )
   }
 }
