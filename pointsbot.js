@@ -1,6 +1,7 @@
 const dayjs = require('dayjs')
 const {
   point_types,
+  reason_seperators,
   domains,
   max_points,
   sheet_id,
@@ -31,7 +32,9 @@ exports.handlePointGiving = function(
     if (command == '!help') {
       client.sendTextMessage(
         roomId,
-        'dish points using the following format:\n!dish [#of points] [type of points] points to [handle, handle, handle] for [reason]'
+        'dish points using the following format:\n!dish [#of points] [type of points] points to [handle, handle, handle] [' +
+          reason_seperators.toString().replace(/,/g, '/') +
+          '] [reason]'
       )
     } else if (command == '!dish') {
       handleDish(event, room, client, auth)
@@ -47,7 +50,13 @@ exports.handlePointGiving = function(
 function handleDish(event, room, client, auth) {
   let message = event.getContent().body
   let matched = false
-  let regex = /!\s*dish\s+(\S+)\s+(\S+)\s+points\s+to\s+(.+?)\s+for\s+([^\n]+)/gi
+
+  let regex = new RegExp(
+    '!\\s*dish\\s+(\\S+)\\s+(\\S+)\\s+points\\s+to\\s+(.+?)\\s+(' +
+      reason_seperators.toString().replace(/,/g, '|') +
+      ')\\s+([^\\n]+)',
+    'gi'
+  )
 
   if (event.getSender() == `@${process.env.BOT_USER}:matrix.org`) {
     // we sent the message.
@@ -66,7 +75,7 @@ function handleDish(event, room, client, auth) {
   do {
     match = regex.exec(message)
     if (match) {
-      tryDish(event, room, client, auth, match[1], match[2], match[3], match[4])
+      tryDish(event, room, client, auth, match[1], match[2], match[3], match[5])
       matched = true
     }
   } while (match)
