@@ -1,4 +1,5 @@
 const fs = require('fs')
+const ical = require('node-ical')
 const markdown = require('markdown').markdown
 let privateRooms = {}
 
@@ -7,6 +8,8 @@ const {
   negativeResponses,
   messages,
   questions,
+  calendarURL,
+  calendarUpperLimitInMonths,
 } = require('./constants')
 
 fs.readFile('./privateRooms.json', 'utf8', function(err, data) {
@@ -14,6 +17,63 @@ fs.readFile('./privateRooms.json', 'utf8', function(err, data) {
     privateRooms = JSON.parse(data)
   }
 })
+
+exports.handleCalendar = function(event, room, toStartOfTimeline, client) {
+  if (event.getType() === 'm.room.message' && toStartOfTimeline === false) {
+    let message = event.getContent().body
+    if (message[1] === ' ') {
+      message = message.replace(' ', '')
+    }
+    const user = event.getSender()
+    const roomId = room.roomId
+    if (message === '!calendar' || message === '!cal') {
+      ical.fromURL(calendarURL, {}, function(err, data) {
+        if (!err) {
+          const today = new Date()
+          const upperLimit = new Date()
+          upperLimit.setDate(today.getDate() + calendarUpperLimitInMonths * 30)
+          const formattingOptions = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          }
+          arr = []
+          for (var key in data) {
+            if (data.hasOwnProperty(key)) {
+              arr.push(data[key])
+            }
+          }
+          arr = arr.filter(
+            entry =>
+              entry.start &&
+              entry.end &&
+              entry.end >= today &&
+              entry.end <= upperLimit
+          )
+          arr.sort(function(a, b) {
+            return a.start - b.start
+          })
+          var output =
+            'Events the next ' + calendarUpperLimitInMonths + ' months:\n\n'
+          arr.forEach(entry => {
+            output +=
+              entry.summary +
+              ' - ' +
+              entry.start.toLocaleDateString('en-US', formattingOptions) +
+              ' - ' +
+              entry.end.toLocaleDateString('en-US', formattingOptions) +
+              '\n'
+          })
+          output += '\nFull Calendar: https://calendar.giveth.io'
+          client.sendTextMessage(roomId, output)
+        } else {
+          client.sendTextMessage(roomId, 'Something went wrong :(')
+        }
+      })
+    }
+  }
+}
 
 exports.handleNewMember = function(event, room, toStartOfTimeline, client) {
   if (
