@@ -58,15 +58,16 @@ exports.handleCalendar = function(event, room, toStartOfTimeline, client) {
             'Events the next ' + calendarUpperLimitInMonths + ' months:\n\n'
           arr.forEach(entry => {
             output +=
+              '- **' +
               entry.summary +
-              ' - ' +
+              '** - ' +
               entry.start.toLocaleDateString('en-US', formattingOptions) +
               ' - ' +
               entry.end.toLocaleDateString('en-US', formattingOptions) +
               '\n'
           })
           output += '\nFull Calendar: https://calendar.giveth.io'
-          client.sendTextMessage(roomId, output)
+          sendMessage(output, user, client, roomId)
         } else {
           client.sendTextMessage(roomId, 'Something went wrong :(')
         }
