@@ -22,6 +22,11 @@ exports.handlePointGiving = function(
     let message = event.getContent().body
     const roomId = room.roomId
 
+    if (message.trim()[0] == '>') {
+      // quoting another user, skip the quoted part
+      message = message.split('\n\n')[1]
+    }
+
     // Support for "! dish" command
     if (message[1] === ' ') {
       message = message.replace(' ', '')
@@ -62,12 +67,14 @@ function handleDish(event, room, client, auth) {
     // we sent the message.
     return
   }
+
   if (event.getContent().formatted_body) {
     message = event.getContent().formatted_body
-  }
-  if (message.trim()[0] == '>') {
+    if (message.includes('</blockquote>')) {
+      message = message = message.split('</blockquote>')[1]
+    }
+  } else if (message.trim()[0] == '>') {
     // quoting another user, skip the quoted part
-    matched = true
     message = message.split('\n\n')[1]
   }
 
