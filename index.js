@@ -97,6 +97,7 @@ function authenticated(auth) {
         })
 
         client.on('Room.timeline', (event, room, toStartOfTimeline) => {
+          chatBot.handleCalendar(event, room, toStartOfTimeline, client)
           chatBot.handleNewMember(event, room, toStartOfTimeline, client)
           pointsBot.handlePointGiving(
             auth,

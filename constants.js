@@ -30,6 +30,11 @@ module.exports.sheet_tab_name = 'PointsBot (DONT RENAME!)!A1:F1'
 
 // CHATBOT
 
+module.exports.calendarURL =
+  'https://calendar.google.com/calendar/ical/givethdotio%40gmail.com/public/basic.ics'
+
+module.exports.calendarUpperLimitInMonths = 2
+
 module.exports.positiveResponses = ['yes', 'yup', 'yea']
 module.exports.negativeResponses = ['no']
 
