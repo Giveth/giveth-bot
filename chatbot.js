@@ -66,7 +66,7 @@ exports.handleCalendar = function(event, room, toStartOfTimeline, client) {
               entry.end.toLocaleDateString('en-US', formattingOptions) +
               '\n'
           })
-          output += '\nFull Calendar: https://calendar.giveth.io'
+          output += '\nFull Calendar: http://calendar.giveth.io'
           sendMessage(output, user, client, roomId)
         } else {
           client.sendTextMessage(roomId, 'Something went wrong :(')
