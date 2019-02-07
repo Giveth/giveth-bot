@@ -135,8 +135,9 @@ function tryDish(event, room, client, auth, nPoints, type, users, reason) {
     users = users.split(',')
 
     const sheets = google.sheets({ version: 'v4', auth })
+    var values = []
 
-    users.forEach((user, idx) => {
+    users.forEach(user => {
       user = user.trim()
       let { userInRoom, receiver, display_name, multipleUsers } = findReceiver(
         room,
@@ -165,38 +166,41 @@ either add this user to the room, or try again using the format @[userId]:[domai
       }
       const date = dayjs().format('DD-MMM-YYYY')
       const link = `https://riot.im/app/#/room/${room.roomId}/${event.getId()}`
-
-      const values = [
-        [
-          receiver,
-          sender,
-          reason,
-          amount.toFormat(2),
-          type,
-          date,
-          link,
-          display_name,
-        ],
-      ]
-      const body = { values }
-      setTimeout(() => {
-        sheets.spreadsheets.values.append(
-          {
-            spreadsheetId: sheet_id,
-            range: sheet_tab_name,
-            valueInputOption: 'USER_ENTERED',
-            resource: body,
-          },
-          err => {
-            if (err) return console.log('The API returned an error: ' + err)
-            client.sendTextMessage(
-              room.roomId,
-              `${sender} dished ${amount} ${type} points to ${receiver}`
-            )
-          }
-        )
-      }, idx * 500)
+      values.push([
+        receiver,
+        sender,
+        reason,
+        amount.toFormat(2),
+        type,
+        date,
+        link,
+        display_name,
+      ])
     })
+
+    const body = { values }
+    sheets.spreadsheets.values.append(
+      {
+        spreadsheetId: sheet_id,
+        range: sheet_tab_name,
+        valueInputOption: 'USER_ENTERED',
+        resource: body,
+      },
+      err => {
+        if (err) {
+          return console.log('The API returned an error: ' + err)
+        }
+
+        values.forEach(value => {
+          client.sendTextMessage(
+            room.roomId,
+            `${value[1]} dished ${value[3].split('.')[0]} ${
+              value[4]
+            } points to ${value[0]}`
+          )
+        })
+      }
+    )
   } catch (err) {
     const MANUAL_ERROR_CODES = [
       'POINTS_NOT_NUMBER',
