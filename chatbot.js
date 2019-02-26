@@ -118,11 +118,13 @@ exports.handleCalendar = function(event, room, toStartOfTimeline, client) {
                   day: 'numeric',
                   hour: 'numeric',
                   minute: 'numeric',
+                  timeZone: 'utc',
                 }) +
                 ' - ' +
                 entry.end.toLocaleTimeString('en-US', {
                   hour: 'numeric',
                   minute: 'numeric',
+                  timeZone: 'utc',
                   timeZoneName: 'short',
                 })
               ;('\n')
