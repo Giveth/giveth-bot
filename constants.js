@@ -30,6 +30,10 @@ module.exports.sheet_tab_name = 'PointsBot (DONT RENAME!)!A1:F1'
 
 // CHATBOT
 
+module.exports.hashtagMappings = {
+  '!kUeYRcrXObgGoJlFjn:matrix.org': 'sc',
+}
+
 module.exports.calendarURL =
   'https://calendar.google.com/calendar/ical/givethdotio%40gmail.com/public/basic.ics'
 
