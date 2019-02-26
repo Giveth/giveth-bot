@@ -8,6 +8,7 @@ const {
   negativeResponses,
   messages,
   questions,
+  hashtagMappings,
   calendarURL,
   calendarUpperLimitInMonths,
 } = require('./constants')
@@ -24,49 +25,110 @@ exports.handleCalendar = function(event, room, toStartOfTimeline, client) {
     if (message[1] === ' ') {
       message = message.replace(' ', '')
     }
+    message = message.split(' ')
+    const cmd = message[0]
+    let localHashtag = ''
+    if (message.length > 1) {
+      localHashtag = message[1].toLowerCase()
+    }
     const user = event.getSender()
     const roomId = room.roomId
-    if (message === '!calendar' || message === '!cal') {
+    if (cmd === '!calendar' || cmd === '!cal') {
+      if (localHashtag.length == 0 && hashtagMappings.hasOwnProperty(roomId)) {
+        localHashtag = hashtagMappings[roomId]
+      }
       ical.fromURL(calendarURL, {}, function(err, data) {
         if (!err) {
           const today = new Date()
           const upperLimit = new Date()
           upperLimit.setDate(today.getDate() + calendarUpperLimitInMonths * 30)
-          const formattingOptions = {
+          const globalFormattingOptions = {
             weekday: 'long',
             year: 'numeric',
             month: 'long',
             day: 'numeric',
           }
-          arr = []
+          globals = []
+          locals = []
           for (var key in data) {
             if (data.hasOwnProperty(key)) {
-              arr.push(data[key])
+              globals.push(data[key])
+              if (localHashtag.length > 0) {
+                locals.push(data[key])
+              }
             }
           }
-          arr = arr.filter(
+          locals = locals.filter(
             entry =>
               entry.start &&
               entry.end &&
               entry.end >= today &&
-              entry.end <= upperLimit
+              entry.end <= upperLimit &&
+              entry.description &&
+              entry.description.includes('#' + localHashtag)
           )
-          arr.sort(function(a, b) {
+          globals = globals.filter(
+            entry =>
+              !locals.includes(entry) &&
+              entry.start &&
+              entry.end &&
+              entry.end >= today &&
+              entry.end <= upperLimit &&
+              getDayOfYear(entry.start) != getDayOfYear(entry.end)
+          )
+          globals.sort(function(a, b) {
+            if (getDayOfYear(a.start) == getDayOfYear(b.start)) {
+              return a.end - b.end
+            } else {
+              return a.start - b.start
+            }
+          })
+          locals.sort(function(a, b) {
             return a.start - b.start
           })
           var output =
-            'Events the next ' + calendarUpperLimitInMonths + ' months:\n\n'
-          arr.forEach(entry => {
+            'Global events the next ' +
+            calendarUpperLimitInMonths +
+            ' months:\n\n'
+          globals.forEach(entry => {
             output +=
               '- **' +
               entry.summary +
               '** - ' +
-              entry.start.toLocaleDateString('en-US', formattingOptions) +
+              entry.start.toLocaleDateString('en-US', globalFormattingOptions) +
               ' - ' +
-              entry.end.toLocaleDateString('en-US', formattingOptions) +
+              entry.end.toLocaleDateString('en-US', globalFormattingOptions) +
               '\n'
           })
           output += '\nFull Calendar: http://calendar.giveth.io'
+          var localOutput =
+            'Local events the next ' +
+            calendarUpperLimitInMonths +
+            ' months:\n\n'
+          if (locals.length > 0) {
+            locals.forEach(entry => {
+              localOutput +=
+                '- **' +
+                entry.summary +
+                '** - ' +
+                entry.start.toLocaleDateString('en-US', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: 'numeric',
+                  minute: 'numeric',
+                }) +
+                ' - ' +
+                entry.end.toLocaleTimeString('en-US', {
+                  hour: 'numeric',
+                  minute: 'numeric',
+                  timeZoneName: 'short',
+                })
+              ;('\n')
+            })
+            output = localOutput + '\n\n' + output
+          }
           sendMessage(output, user, client, roomId)
         } else {
           client.sendTextMessage(roomId, 'Something went wrong :(')
@@ -195,6 +257,16 @@ exports.handleResponse = function(event, room, toStartOfTimeline, client) {
       }
     }
   }
+}
+
+function getDayOfYear(date) {
+  var start = new Date(date.getFullYear(), 0, 0)
+  var diff =
+    date -
+    start +
+    (start.getTimezoneOffset() - date.getTimezoneOffset()) * 60 * 1000
+  var oneDay = 1000 * 60 * 60 * 24
+  return Math.floor(diff / oneDay)
 }
 
 function checkUser(user) {
