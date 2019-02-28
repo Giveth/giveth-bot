@@ -6,6 +6,7 @@ const {
   max_points,
   sheet_id,
   sheet_tab_name,
+  dish_notification_msg,
 } = require('./constants')
 const BigNumber = require('bignumber.js')
 const { google } = require('googleapis')
@@ -15,7 +16,8 @@ exports.handlePointGiving = function(
   event,
   room,
   toStartOfTimeline,
-  client
+  client,
+  notificationFunction
 ) {
   if (event.getType() === 'm.room.message' && toStartOfTimeline === false) {
     client.setPresence('online')
@@ -42,7 +44,7 @@ exports.handlePointGiving = function(
           '] [reason]'
       )
     } else if (command == '!dish') {
-      handleDish(event, room, client, auth)
+      handleDish(event, room, notificationFunction, client, auth)
     } else if (command == '!sheet') {
       client.sendTextMessage(
         roomId,
@@ -52,7 +54,7 @@ exports.handlePointGiving = function(
   }
 }
 
-function handleDish(event, room, client, auth) {
+function handleDish(event, room, notificationFunc, client, auth) {
   let message = event.getContent().body
   let matched = false
 
@@ -82,7 +84,17 @@ function handleDish(event, room, client, auth) {
   do {
     match = regex.exec(message)
     if (match) {
-      tryDish(event, room, client, auth, match[1], match[2], match[3], match[5])
+      tryDish(
+        event,
+        room,
+        client,
+        auth,
+        notificationFunc,
+        match[1],
+        match[2],
+        match[3],
+        match[5]
+      )
       matched = true
     }
   } while (match)
@@ -94,7 +106,17 @@ function handleDish(event, room, client, auth) {
   }
 }
 
-function tryDish(event, room, client, auth, nPoints, type, users, reason) {
+function tryDish(
+  event,
+  room,
+  client,
+  auth,
+  notificationFunc,
+  nPoints,
+  type,
+  users,
+  reason
+) {
   try {
     const sender = event.getSender()
     const amount = new BigNumber(nPoints)
@@ -197,6 +219,14 @@ either add this user to the room, or try again using the format @[userId]:[domai
             `${value[1]} dished ${value[3].split('.')[0]} ${
               value[4]
             } points to ${value[0]}`
+          )
+          notificationFunc(
+            dish_notification_msg
+              .replace('%DISHER%', value[1])
+              .replace('%ROOM%', value[6]),
+            value[0],
+            client,
+            null
           )
         })
       }
