@@ -104,7 +104,8 @@ function authenticated(auth) {
             event,
             room,
             toStartOfTimeline,
-            client
+            client,
+            chatBot.sendInternalMessage
           )
           chatBot.handleResponse(event, room, toStartOfTimeline, client)
         })

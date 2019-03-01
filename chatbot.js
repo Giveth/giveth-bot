@@ -338,7 +338,12 @@ function sendNextQuestion(curQuestion, questions, user, client, room) {
   })
 }
 
-function sendInternalMessage(msg, user, client, callback) {
+exports.sendInternalMessage = function sendInternalMessage(
+  msg,
+  user,
+  client,
+  callback
+) {
   if (privateRooms[user] && privateRooms[user].room) {
     sendMessage(msg, user, client, privateRooms[user].room)
     if (callback) {
