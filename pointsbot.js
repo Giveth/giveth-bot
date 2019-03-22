@@ -62,7 +62,7 @@ exports.handlePointGiving = function(
           room,
           notificationFunction,
           client,
-          privateRooms,
+          privateRooms
         )
         client.sendTextMessage(
           roomId,
@@ -80,7 +80,7 @@ function handleMilestoneAutomation(
   room,
   notificationFunc,
   client,
-  privateRooms,
+  privateRooms
 ) {
   for (var user in privateRooms) {
     var values = privateRooms[user]
