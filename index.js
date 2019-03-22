@@ -4,6 +4,7 @@ const { google } = require('googleapis')
 const sdk = require('matrix-js-sdk')
 const pointsBot = require('./pointsbot.js')
 const chatBot = require('./chatbot.js')
+let privateRooms = {}
 
 // If modifying these scopes, delete credentials.json.
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
@@ -14,6 +15,12 @@ fs.readFile('client_secret.json', (err, content) => {
   if (err) return console.log('Error loading client secret file:', err)
   // Authorize a client with credentials, then call the Google Sheets API.
   authorize(JSON.parse(content), authenticated)
+})
+
+fs.readFile('./privateRooms.json', 'utf8', function(err, data) {
+  if (!err) {
+    privateRooms = JSON.parse(data)
+  }
 })
 
 /**
@@ -98,22 +105,44 @@ function authenticated(auth) {
 
         client.on('Room.timeline', (event, room, toStartOfTimeline) => {
           chatBot.handleCalendar(event, room, toStartOfTimeline, client)
-          chatBot.handleNewMember(event, room, toStartOfTimeline, client)
+          chatBot.handleNewMember(
+            event,
+            room,
+            toStartOfTimeline,
+            client,
+            privateRooms
+          )
           pointsBot.handlePointGiving(
             auth,
             event,
             room,
             toStartOfTimeline,
             client,
+            privateRooms,
             chatBot.sendInternalMessage
           )
-          chatBot.handleResponse(event, room, toStartOfTimeline, client)
+          chatBot.handleResponse(
+            event,
+            room,
+            toStartOfTimeline,
+            client,
+            privateRooms
+          )
+          savePrivateRooms()
         })
 
         client.startClient(0)
       }
     )
   })
+}
+
+function savePrivateRooms() {
+  fs.writeFile(
+    './privateRooms.json',
+    JSON.stringify(privateRooms, null, 2),
+    'utf-8'
+  )
 }
 
 // Zeit NOW workaround

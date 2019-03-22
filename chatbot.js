@@ -1,7 +1,5 @@
-const fs = require('fs')
 const ical = require('node-ical')
 const markdown = require('markdown').markdown
-let privateRooms = {}
 
 const {
   positiveResponses,
@@ -12,12 +10,6 @@ const {
   calendarURL,
   calendarUpperLimitInMonths,
 } = require('./constants')
-
-fs.readFile('./privateRooms.json', 'utf8', function(err, data) {
-  if (!err) {
-    privateRooms = JSON.parse(data)
-  }
-})
 
 exports.handleCalendar = function(event, room, toStartOfTimeline, client) {
   if (event.getType() === 'm.room.message' && toStartOfTimeline === false) {
@@ -140,7 +132,13 @@ exports.handleCalendar = function(event, room, toStartOfTimeline, client) {
   }
 }
 
-exports.handleNewMember = function(event, room, toStartOfTimeline, client) {
+exports.handleNewMember = function(
+  event,
+  room,
+  toStartOfTimeline,
+  client,
+  privateRooms
+) {
   if (
     event.event.membership === 'join' &&
     (!event.event.unsigned.prev_content ||
@@ -156,6 +154,7 @@ exports.handleNewMember = function(event, room, toStartOfTimeline, client) {
         room,
         user,
         client,
+        privateRooms,
         roomMessages.externalMsg,
         roomMessages.internalMsg
       )
@@ -163,7 +162,13 @@ exports.handleNewMember = function(event, room, toStartOfTimeline, client) {
   }
 }
 
-exports.handleResponse = function(event, room, toStartOfTimeline, client) {
+exports.handleResponse = function(
+  event,
+  room,
+  toStartOfTimeline,
+  client,
+  privateRooms
+) {
   if (event.getType() === 'm.room.message' && toStartOfTimeline === false) {
     let msg = event.getContent().body
     const user = event.getSender()
@@ -255,7 +260,6 @@ exports.handleResponse = function(event, room, toStartOfTimeline, client) {
       if (privateRoom && privateRoom.room == event.event.room_id) {
         privateRoom.room = undefined
         privateRoom.welcoming = undefined
-        savePrivateRooms()
       }
     }
   }
@@ -309,23 +313,37 @@ function checkForRoomQuestions(
   return false
 }
 
-function handleWelcome(room, user, client, externalMsg, internalMsg) {
+function handleWelcome(
+  room,
+  user,
+  client,
+  privateRooms,
+  externalMsg,
+  internalMsg
+) {
   if (typeof externalMsg === 'string') {
     sendMessage(externalMsg, user, client, room)
   }
   if (typeof internalMsg === 'string') {
-    sendInternalMessage(internalMsg, user, client)
+    sendInternalMessage(internalMsg, user, client, privateRooms)
   } else if (typeof internalMsg === 'object') {
     if (
       !privateRooms[user] ||
       (privateRooms[user] && !privateRooms[user].welcoming)
     ) {
-      sendNextQuestion(-1, internalMsg, user, client, room)
+      sendNextQuestion(-1, internalMsg, user, privateRooms, client, room)
     }
   }
 }
 
-function sendNextQuestion(curQuestion, questions, user, client, room) {
+function sendNextQuestion(
+  curQuestion,
+  questions,
+  user,
+  privateRooms,
+  client,
+  room
+) {
   curQuestion++
   if (privateRooms[user]) {
     privateRooms[user].welcoming = { room: room, curQuestion: curQuestion }
@@ -333,7 +351,7 @@ function sendNextQuestion(curQuestion, questions, user, client, room) {
   let question = questions[curQuestion]
   sendInternalMessage(question.msg, user, client, () => {
     if (!question.positive) {
-      sendNextQuestion(curQuestion, questions, user, client, room)
+      sendNextQuestion(curQuestion, questions, user, privateRooms, client, room)
     }
   })
 }
@@ -342,6 +360,7 @@ exports.sendInternalMessage = function sendInternalMessage(
   msg,
   user,
   client,
+  privateRooms,
   callback
 ) {
   if (privateRooms[user] && privateRooms[user].room) {
@@ -358,7 +377,6 @@ exports.sendInternalMessage = function sendInternalMessage(
       })
       .then(res => {
         privateRooms[user] = { room: res.room_id }
-        savePrivateRooms()
         sendMessage(msg, user, client, privateRooms[user].room)
         if (callback) {
           callback()
@@ -375,12 +393,4 @@ function sendMessage(msg, user, client, room) {
     html = html.replace('%USER%', user)
     client.sendHtmlMessage(room, msg, html)
   }
-}
-
-function savePrivateRooms() {
-  fs.writeFile(
-    './privateRooms.json',
-    JSON.stringify(privateRooms, null, 2),
-    'utf-8'
-  )
 }
