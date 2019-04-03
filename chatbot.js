@@ -1,6 +1,7 @@
 const fs = require('fs')
 const ical = require('node-ical')
 const markdown = require('markdown').markdown
+var moment = require('moment-timezone')
 let privateRooms = {}
 
 const {
@@ -51,7 +52,24 @@ exports.handleCalendar = function(event, room, toStartOfTimeline, client) {
           globals = []
           locals = []
           for (var key in data) {
-            if (data.hasOwnProperty(key)) {
+            if (data.hasOwnProperty(key) && data[key].start && data[key].end) {
+              if (data[key].rrule && data[key].start.tz) {
+                var nextOccurrences = data[key].rrule.between(
+                  today,
+                  upperLimit,
+                  true
+                )
+                if (nextOccurrences.length > 0) {
+                  var timezone = data[key].start.tz
+                  var diff = data[key].end.getTime() - data[key].start.getTime()
+                  data[key].start = moment
+                    .tz(nextOccurrences[0].getTime(), timezone)
+                    .toDate()
+                  data[key].end = moment
+                    .tz(nextOccurrences[0].getTime() + diff, timezone)
+                    .toDate()
+                }
+              }
               globals.push(data[key])
               if (localHashtag.length > 0) {
                 locals.push(data[key])
