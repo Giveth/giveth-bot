@@ -34,6 +34,14 @@ module.exports.dish_notification_msg =
 \n\nDo act soon, these points don’t last forever. Unclaimed ETH rolls over at month end! To make a milestone and get that Eth, go to the [RewardDAO Campaign](https://beta.giveth.io/campaigns/5b3d9746329bc64ae74d1424) for the next steps and create a Profile on our Beta platform if you haven't already.\
 \n\nTHANK YOU for being here from the Giveth Unicorns (and our fabulous PointsBot)!"
 
+module.exports.milestone_automation_trigger_users = ['@danibelle:matrix.org']
+
+module.exports.milestone_notification_msg =
+  "You've got Love from Giveth!\
+  We appreciate your contributions and the [RewardDAO](https://beta.giveth.io/campaigns/5b3d9746329bc64ae74d1424) is here to thank you.\
+\nYou were [dished points](https://docs.google.com/spreadsheets/d/12cblUYuYq4NwZX7JdRo0-NWnrOxlDy-XCbvF3ugzb2c/edit#gid=0) in the month of %MONTH%, which means you have ETH waiting for you to collect it. To do so you'll need to create a Milestone by %DEADLINE%.\
+\n\n[Prepare to record or upload a video](https://wiki.giveth.io/dapp/milestones/) to claim your monthly reward, and [use this link when you're ready to create the milestone](%LINK%) - it will automatically populate important details. Join the conversation in our [#contributors](https://riot.im/app/#/room/#giveth-contributors:matrix.org) room for more information and updates please, see you there!"
+
 // CHATBOT
 
 module.exports.hashtagMappings = {

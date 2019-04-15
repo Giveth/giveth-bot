@@ -7,6 +7,8 @@ const {
   sheet_id,
   sheet_tab_name,
   dish_notification_msg,
+  milestone_automation_trigger_users,
+  milestone_notification_msg,
 } = require('./constants')
 const BigNumber = require('bignumber.js')
 const { google } = require('googleapis')
@@ -17,12 +19,14 @@ exports.handlePointGiving = function(
   room,
   toStartOfTimeline,
   client,
+  privateRooms,
   notificationFunction
 ) {
   if (event.getType() === 'm.room.message' && toStartOfTimeline === false) {
     client.setPresence('online')
     let message = event.getContent().body
     const roomId = room.roomId
+    const user = event.getSender()
 
     if (message.trim()[0] == '>') {
       // quoting another user, skip the quoted part
@@ -34,7 +38,8 @@ exports.handlePointGiving = function(
       message = message.replace(' ', '')
     }
 
-    const command = message.toLowerCase().split(' ')[0]
+    const msg = message.split(' ')
+    const command = msg[0].toLowerCase()
 
     if (command == '!help') {
       client.sendTextMessage(
@@ -44,17 +49,85 @@ exports.handlePointGiving = function(
           '] [reason]'
       )
     } else if (command == '!dish') {
-      handleDish(event, room, notificationFunction, client, auth)
+      handleDish(event, room, privateRooms, notificationFunction, client, auth)
     } else if (command == '!sheet') {
       client.sendTextMessage(
         roomId,
         `the rewardDAO sheet can be found here: https://docs.google.com/spreadsheets/d/${sheet_id}`
       )
+    } else if (command == '!sendmilestones') {
+      if (milestone_automation_trigger_users.includes(user)) {
+        handleMilestoneAutomation(
+          event,
+          room,
+          notificationFunction,
+          client,
+          privateRooms
+        )
+        client.sendTextMessage(
+          roomId,
+          `Sent notifications of milestone creation to all elgible users!`
+        )
+      } else {
+        client.sendTextMessage(roomId, `Sorry, you're not allowed to do that.`)
+      }
     }
   }
 }
 
-function handleDish(event, room, notificationFunc, client, auth) {
+function handleMilestoneAutomation(
+  event,
+  room,
+  notificationFunc,
+  client,
+  privateRooms
+) {
+  for (var user in privateRooms) {
+    var values = privateRooms[user]
+    console.log(user)
+    console.log(values)
+    var now = new Date()
+    if (
+      values.lastMonthNotified != now.getMonth() &&
+      values.lastDishMonth == now.getMonth()
+    ) {
+      var startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+      var month = now.toLocaleString('en-us', { month: 'long' })
+      var title =
+        'RewardDAO ' +
+        now.toLocaleString('en-us', { month: 'long', year: 'numeric' }) +
+        ': ' +
+        user
+      var url = `https://beta.giveth.io/campaigns/5b3d9746329bc64ae74d1424/milestones/propose?title=${encodeURI(
+        title
+      )}&date=${encodeURI(startOfMonth)}&isCapped=0&requireReviewer=0`
+      var deadline = new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        7
+      ).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+      console.log(new Date(now.getFullYear(), 13, 7))
+      notificationFunc(
+        milestone_notification_msg
+          .replace('%LINK%', url)
+          .replace('%MONTH%', month)
+          .replace('%DEADLINE%', deadline),
+        user,
+        client,
+        privateRooms,
+        null
+      )
+      privateRooms[user].lastMonthNotified = now.getMonth()
+      //privateRooms[milestone[0]].lastMonthNotified = now.getMonth()
+    }
+  }
+}
+
+function handleDish(event, room, privateRooms, notificationFunc, client, auth) {
   let message = event.getContent().body
   let matched = false
 
@@ -89,6 +162,7 @@ function handleDish(event, room, notificationFunc, client, auth) {
         room,
         client,
         auth,
+        privateRooms,
         notificationFunc,
         match[1],
         match[2],
@@ -111,6 +185,7 @@ function tryDish(
   room,
   client,
   auth,
+  privateRooms,
   notificationFunc,
   nPoints,
   type,
@@ -226,8 +301,10 @@ either add this user to the room, or try again using the format @[userId]:[domai
               .replace('%ROOM%', value[6]),
             value[0],
             client,
+            privateRooms,
             null
           )
+          privateRooms[value[0]].lastDishMonth = new Date().getMonth()
         })
       }
     )
