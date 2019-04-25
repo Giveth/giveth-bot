@@ -141,7 +141,9 @@ function savePrivateRooms() {
   fs.writeFile(
     './privateRooms.json',
     JSON.stringify(privateRooms, null, 2),
-    'utf-8'
+    err => {
+      if (err) console.error(err)
+    }
   )
 }
 
