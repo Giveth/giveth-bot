@@ -66,7 +66,7 @@ exports.handlePointGiving = function(
         )
         client.sendTextMessage(
           roomId,
-          `Sent notifications of milestone creation to all elgible users!`
+          `Sent notifications of milestone creation to all eligible users!`
         )
       } else {
         client.sendTextMessage(roomId, `Sorry, you're not allowed to do that.`)
