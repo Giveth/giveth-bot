@@ -62,9 +62,10 @@ module.exports.messages = {
     internalMsg:
       'Now that you’re in Social Coding there are a few resources that will help you along the way:\
     [What are points](https://medium.com/giveth/how-rewarddao-works-aka-what-are-points-7388f70269a) and [What is Social Coding](https://medium.com/giveth/what-is-social-coding-fa81feacfa32).\
-   if you have any questions that are not covered in the literature please reach out to @parker_williams:matrix.org or @yalormewn:matrix.org and they will happily follow up with you in 24-48 hours',
+   If you would like to register with us, letting us know about any project you are working on, want to get help on your project, or if you would like to work on a new project, please fill out our [Roll Call Questionnaire](https://docs.google.com/forms/d/e/1FAIpQLSeUasIj--5DF2RIhg-fdRHzi1RvfPH7_jT5OuiXend39ti69A/viewform?usp=sf_link).\
+   If you have any questions that are not covered in the literature, please reach out to @misterboyfriend:matrix.org and he will happily follow up with you in 24-48 hours.',
     externalMsg:
-      'Welcome %USER% to Social Coding where your pragma can roam the wild steppe of the blockchain world. I’ve also sent you a direct message with more info.',
+      'Welcome to Social Coding, %USER%! Please feel free to ask any questions in channel. I’ve also sent you a direct message with more info.',
   },
 
   // GENERAL
