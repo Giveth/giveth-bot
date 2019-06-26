@@ -1,10 +1,14 @@
 const dayjs = require('dayjs')
 const {
   point_types,
+  reason_seperators,
   domains,
   max_points,
   sheet_id,
   sheet_tab_name,
+  dish_notification_msg,
+  milestone_automation_trigger_users,
+  milestone_notification_msg,
 } = require('./constants')
 const BigNumber = require('bignumber.js')
 const { google } = require('googleapis')
@@ -14,51 +18,138 @@ exports.handlePointGiving = function(
   event,
   room,
   toStartOfTimeline,
-  client
+  client,
+  privateRooms,
+  notificationFunction
 ) {
   if (event.getType() === 'm.room.message' && toStartOfTimeline === false) {
     client.setPresence('online')
     let message = event.getContent().body
     const roomId = room.roomId
+    const user = event.getSender()
+
+    if (message.trim()[0] == '>') {
+      // quoting another user, skip the quoted part
+      message = message.split('\n\n')[1]
+    }
 
     // Support for "! dish" command
     if (message[1] === ' ') {
       message = message.replace(' ', '')
     }
 
-    const command = message.toLowerCase().split(' ')[0]
+    const msg = message.split(' ')
+    const command = msg[0].toLowerCase()
 
     if (command == '!help') {
       client.sendTextMessage(
         roomId,
-        'dish points using the following format:\n!dish [#of points] [type of points] points to [handle, handle, handle] for [reason]'
+        'dish points using the following format:\n!dish [#of points] [type of points] points to [handle, handle, handle] [' +
+          reason_seperators.toString().replace(/,/g, '/') +
+          '] [reason]'
       )
     } else if (command == '!dish') {
-      handleDish(event, room, client, auth)
+      handleDish(event, room, privateRooms, notificationFunction, client, auth)
     } else if (command == '!sheet') {
       client.sendTextMessage(
         roomId,
         `the rewardDAO sheet can be found here: https://docs.google.com/spreadsheets/d/${sheet_id}`
       )
+    } else if (command == '!sendmilestones') {
+      if (milestone_automation_trigger_users.includes(user)) {
+        handleMilestoneAutomation(
+          event,
+          room,
+          notificationFunction,
+          client,
+          privateRooms
+        )
+        client.sendTextMessage(
+          roomId,
+          `Sent notifications of milestone creation to all eligible users!`
+        )
+      } else {
+        client.sendTextMessage(roomId, `Sorry, you're not allowed to do that.`)
+      }
     }
   }
 }
 
-function handleDish(event, room, client, auth) {
+function handleMilestoneAutomation(
+  event,
+  room,
+  notificationFunc,
+  client,
+  privateRooms
+) {
+  for (var user in privateRooms) {
+    var values = privateRooms[user]
+    console.log(user)
+    console.log(values)
+    var now = new Date()
+    if (
+      values.lastMonthNotified != now.getMonth() &&
+      values.lastDishMonth == now.getMonth()
+    ) {
+      var startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
+      var month = now.toLocaleString('en-us', { month: 'long' })
+      var title =
+        'RewardDAO ' +
+        now.toLocaleString('en-us', { month: 'long', year: 'numeric' }) +
+        ': ' +
+        user
+      var url = `https://beta.giveth.io/campaigns/5b3d9746329bc64ae74d1424/milestones/propose?title=${encodeURI(
+        title
+      )}&date=${encodeURI(startOfMonth)}&isCapped=0&requireReviewer=0`
+      var deadline = new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        7
+      ).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })
+      console.log(new Date(now.getFullYear(), 13, 7))
+      notificationFunc(
+        milestone_notification_msg
+          .replace('%LINK%', url)
+          .replace('%MONTH%', month)
+          .replace('%DEADLINE%', deadline),
+        user,
+        client,
+        privateRooms,
+        null
+      )
+      privateRooms[user].lastMonthNotified = now.getMonth()
+      //privateRooms[milestone[0]].lastMonthNotified = now.getMonth()
+    }
+  }
+}
+
+function handleDish(event, room, privateRooms, notificationFunc, client, auth) {
   let message = event.getContent().body
   let matched = false
-  let regex = /!\s*dish\s+(\S+)\s+(\S+)\s+points\s+to\s+(.+?)\s+for\s+([^\n]+)/gi
+
+  let regex = new RegExp(
+    '!\\s*dish\\s+(\\S+)\\s+(\\S+)\\s+points\\s+to\\s+(.+?)\\s+(' +
+      reason_seperators.toString().replace(/,/g, '|') +
+      ')\\s+([^\\n]+)',
+    'gi'
+  )
 
   if (event.getSender() == `@${process.env.BOT_USER}:matrix.org`) {
     // we sent the message.
     return
   }
+
   if (event.getContent().formatted_body) {
     message = event.getContent().formatted_body
-  }
-  if (message.trim()[0] == '>') {
+    if (message.includes('</blockquote>')) {
+      message = message = message.split('</blockquote>')[1]
+    }
+  } else if (message.trim()[0] == '>') {
     // quoting another user, skip the quoted part
-    matched = true
     message = message.split('\n\n')[1]
   }
 
@@ -66,7 +157,18 @@ function handleDish(event, room, client, auth) {
   do {
     match = regex.exec(message)
     if (match) {
-      tryDish(event, room, client, auth, match[1], match[2], match[3], match[4])
+      tryDish(
+        event,
+        room,
+        client,
+        auth,
+        privateRooms,
+        notificationFunc,
+        match[1],
+        match[2],
+        match[3],
+        match[5]
+      )
       matched = true
     }
   } while (match)
@@ -78,7 +180,18 @@ function handleDish(event, room, client, auth) {
   }
 }
 
-function tryDish(event, room, client, auth, nPoints, type, users, reason) {
+function tryDish(
+  event,
+  room,
+  client,
+  auth,
+  privateRooms,
+  notificationFunc,
+  nPoints,
+  type,
+  users,
+  reason
+) {
   try {
     const sender = event.getSender()
     const amount = new BigNumber(nPoints)
@@ -119,8 +232,9 @@ function tryDish(event, room, client, auth, nPoints, type, users, reason) {
     users = users.split(',')
 
     const sheets = google.sheets({ version: 'v4', auth })
+    var values = []
 
-    users.forEach((user, idx) => {
+    users.forEach(user => {
       user = user.trim()
       let { userInRoom, receiver, display_name, multipleUsers } = findReceiver(
         room,
@@ -149,38 +263,51 @@ either add this user to the room, or try again using the format @[userId]:[domai
       }
       const date = dayjs().format('DD-MMM-YYYY')
       const link = `https://riot.im/app/#/room/${room.roomId}/${event.getId()}`
-
-      const values = [
-        [
-          receiver,
-          sender,
-          reason,
-          amount.toFormat(2),
-          type,
-          date,
-          link,
-          display_name,
-        ],
-      ]
-      const body = { values }
-      setTimeout(() => {
-        sheets.spreadsheets.values.append(
-          {
-            spreadsheetId: sheet_id,
-            range: sheet_tab_name,
-            valueInputOption: 'USER_ENTERED',
-            resource: body,
-          },
-          err => {
-            if (err) return console.log('The API returned an error: ' + err)
-            client.sendTextMessage(
-              room.roomId,
-              `${sender} dished ${amount} ${type} points to ${receiver}`
-            )
-          }
-        )
-      }, idx * 500)
+      values.push([
+        receiver,
+        sender,
+        reason,
+        amount.toFormat(2),
+        type,
+        date,
+        link,
+        display_name,
+      ])
     })
+
+    const body = { values }
+    sheets.spreadsheets.values.append(
+      {
+        spreadsheetId: sheet_id,
+        range: sheet_tab_name,
+        valueInputOption: 'USER_ENTERED',
+        resource: body,
+      },
+      err => {
+        if (err) {
+          return console.log('The API returned an error: ' + err)
+        }
+
+        values.forEach(value => {
+          client.sendTextMessage(
+            room.roomId,
+            `${value[1]} dished ${value[3].split('.')[0]} ${
+              value[4]
+            } points to ${value[0]}`
+          )
+          notificationFunc(
+            dish_notification_msg
+              .replace('%DISHER%', value[1])
+              .replace('%ROOM%', value[6]),
+            value[0],
+            client,
+            privateRooms,
+            null
+          )
+          privateRooms[value[0]].lastDishMonth = new Date().getMonth()
+        })
+      }
+    )
   } catch (err) {
     const MANUAL_ERROR_CODES = [
       'POINTS_NOT_NUMBER',

@@ -16,6 +16,8 @@ module.exports.point_types = [
   'SIGNALING',
 ]
 
+module.exports.reason_seperators = ['for', 'over', 'because']
+
 module.exports.domains = ['matrix.org', 'status.im', 'giveth.io', 'gitter.im']
 
 module.exports.max_points = 10000
@@ -26,7 +28,30 @@ module.exports.sheet_id =
     : '10sU4UNlCq8fZ3f4zouoq945zTScw27uUV1LU0siA1YA'
 module.exports.sheet_tab_name = 'PointsBot (DONT RENAME!)!A1:F1'
 
+module.exports.dish_notification_msg =
+  "Congratulations! Your contribution to Giveth has been recognized by %DISHER% [here](%ROOM%) and you have received Reward Points that can be collected as Eth.\
+\n\nPlease join the [Contributors](https://riot.im/app/#/room/#giveth-contributors:matrix.org) Room and see the [Contributors Guide](https://wiki.giveth.io/dac/contributors-guide/) on our Wiki to learn more\
+\n\nDo act soon, these points don’t last forever. Unclaimed ETH rolls over at month end! To make a milestone and get that Eth, go to the [RewardDAO Campaign](https://beta.giveth.io/campaigns/5b3d9746329bc64ae74d1424) for the next steps and create a Profile on our Beta platform if you haven't already.\
+\n\nTHANK YOU for being here from the Giveth Unicorns (and our fabulous PointsBot)!"
+
+module.exports.milestone_automation_trigger_users = ['@danibelle:matrix.org']
+
+module.exports.milestone_notification_msg =
+  "You've got Love from Giveth!\
+  We appreciate your contributions and the [RewardDAO](https://beta.giveth.io/campaigns/5b3d9746329bc64ae74d1424) is here to thank you.\
+\nYou were [dished points](https://docs.google.com/spreadsheets/d/12cblUYuYq4NwZX7JdRo0-NWnrOxlDy-XCbvF3ugzb2c/edit#gid=0) in the month of %MONTH%, which means you have ETH waiting for you to collect it. To do so you'll need to create a Milestone by %DEADLINE%.\
+\n\n[Prepare to record or upload a video](https://wiki.giveth.io/dapp/milestones/) to claim your monthly reward, and [use this link when you're ready to create the milestone](%LINK%) - it will automatically populate important details. Join the conversation in our [#contributors](https://riot.im/app/#/room/#giveth-contributors:matrix.org) room for more information and updates please, see you there!"
+
 // CHATBOT
+
+module.exports.hashtagMappings = {
+  '!kUeYRcrXObgGoJlFjn:matrix.org': 'sc',
+}
+
+module.exports.calendarURL =
+  'https://calendar.google.com/calendar/ical/givethdotio%40gmail.com/public/basic.ics'
+
+module.exports.calendarUpperLimitInMonths = 2
 
 module.exports.positiveResponses = ['yes', 'yup', 'yea']
 module.exports.negativeResponses = ['no']
@@ -106,7 +131,7 @@ module.exports.messages = {
   // COMMUNITIES
   '!FBZLHmkNLmabnszigV:matrix.org': {
     externalMsg:
-      'Welcome %USER% to the Communities room! Feel free to introduce yourself or ask any question! If you want to help us test the DApp releases, please let us know right here! If you want to be or help us build one of the first Communities (DACs) or Campaigns on the DApp, please introduce yourself here and take a minute to fill out the form I just sent you!',
+      'Welcome %USER% to the Communities room! Feel free to introduce yourself or ask any question! If you want to be or help us build one of the first Communities (DACs) or Campaigns on the DApp, please introduce yourself here and take a minute to fill out the form I just sent you!',
     internalMsg: [
       {
         msg:
@@ -120,7 +145,7 @@ module.exports.messages = {
     externalMsg:
       'Welcome %USER% to the Communications room! Feel free to introduce yourself or ask any question! I’ve also sent you a direct message with more info.',
     internalMsg:
-      'Hey %USER%, welcome to the Communications room! If you want to actively participate and help us Build the Future of Giving make sure to join our Communications Circle Meeting [here](https://meet.jit.si/giveth-communication). This normally takes place every Wednesday at 5PM CET and is announced in the room. If you have any specific communication skills and want to help out, make sure to add your details [here](http://bit.ly/GivethMaker)',
+      'Hey %USER%, welcome to the Communications room! If you want to actively participate and help us Build the Future of Giving make sure to join our Communications Circle Meeting [here](https://meet.jit.si/giveth-communication). This normally takes place every Wednesday at 6PM CE(S)T and is announced in the room. If you have any specific communication skills and want to help out, make sure to add your details [here](http://bit.ly/GivethMaker)',
   },
 
   // GOVERNANCE
@@ -128,7 +153,7 @@ module.exports.messages = {
     externalMsg:
       'Welcome %USER% to the Governance room! Feel free to introduce yourself or ask any question',
     internalMsg:
-      'Hey %USER%, welcome to the Governance room! If you want to actively participate and help us Build the Future of Giving you are welcome to join our Governance Meeting [here](https://meet.jit.si/giveth-gov) . This normally takes place every Thursday at 5PM CET and is announced in the room.',
+      'Hey %USER%, welcome to the Governance room! If you want to actively participate and help us Build the Future of Giving you are welcome to join our Governance Meeting [here](https://meet.jit.si/giveth-gov) . This normally takes place every Thursday at 6PM CE(S)T and is announced in the room.',
   },
 
   // DApp DEVELOPMENT
@@ -153,11 +178,6 @@ module.exports.questions = {
   // SOCIAL CODING
   '!kUeYRcrXObgGoJlFjn:matrix.org': [
     {
-      trigger: ['Blockternship', 'Project I can work on', 'hackathon'],
-      answer:
-        'Be sure to join the #blockternship:matrix.org room to connect with the #Buidlers :-)',
-    },
-    {
       trigger: [
         'When is the next',
         'Sync',
@@ -165,7 +185,7 @@ module.exports.questions = {
         'Social Coding Sync',
       ],
       answer:
-        'The Social Coding Sync is every other week on Tuesday at 05.00PM CE(S)T,  08:00 PST, 03:00PM GMT) right [here](https://meet.jit.si/socialcoding)',
+        'The Social Coding Sync is every other week on Tuesday at 05:00PM UTC) right [here](https://meet.jit.si/socialcoding) - see !cal for next meeting date.',
     },
   ],
 
@@ -238,7 +258,7 @@ module.exports.questions = {
         'Weekly Comms Circle meeting in',
       ],
       answer:
-        'The Comms meeting takes place on Wednesday at 05.00PM CE(S)T, (= 11AM EDT - 04PM UTC/GMT+1 -- 8AM PT -- 10PM ICT) - Join us [here](https://meet.jit.si/giveth-communication)',
+        'The Comms meeting takes place on Wednesday at 06.00PM CE(S)T, (= 12PM EDT - 05PM UTC - 09AM PT -- 12AM ICT) - Join us [here](https://meet.jit.si/giveth-communication)',
     },
     {
       trigger: ['Comms Meeting notes', 'Our meeting notes'],
