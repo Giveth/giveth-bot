@@ -281,6 +281,7 @@ either add this user to the room, or try again using the format @[userId]:[domai
         spreadsheetId: sheet_id,
         range: sheet_tab_name,
         valueInputOption: 'USER_ENTERED',
+        insertDataOption: 'INSERT_ROWS',
         resource: body,
       },
       err => {
