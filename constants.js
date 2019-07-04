@@ -1,3 +1,6 @@
+var moment = require('moment');
+require('moment-recur');
+
 // Allowed users that can dish out points
 // module.exports.userList = [
 // ]
@@ -55,6 +58,14 @@ module.exports.calendarUpperLimitInMonths = 2
 
 module.exports.positiveResponses = ['yes', 'yup', 'yea']
 module.exports.negativeResponses = ['no']
+
+module.exports.scheduledMessages = [
+  { 
+    room: '!LkseNfRMMIMEqUHVBW:matrix.org',
+    message: 'Test scheduled message',
+    when: moment.recur().every("Monday").daysOfWeek().every([1, 3]).weeksOfMonthByDay(),
+  }
+]
 
 module.exports.messages = {
   // SOCIAL CODING
