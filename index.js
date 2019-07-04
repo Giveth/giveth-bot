@@ -4,7 +4,7 @@ const { google } = require('googleapis')
 const sdk = require('matrix-js-sdk')
 const pointsBot = require('./pointsbot.js')
 const chatBot = require('./chatbot.js')
-var schedule = require('node-schedule');
+var schedule = require('node-schedule')
 let privateRooms = {}
 
 // If modifying these scopes, delete credentials.json.
@@ -135,9 +135,9 @@ function authenticated(auth) {
         client.startClient(0)
 
         var scheduledMessageJob = schedule.scheduleJob(
-          "1 0 * * *",
+          '1 0 * * *',
           chatBot.handleScheduledMessages(client)
-        );
+        )
       }
     )
   })

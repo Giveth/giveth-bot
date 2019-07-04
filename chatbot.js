@@ -1,6 +1,6 @@
 const ical = require('node-ical')
 const markdown = require('markdown').markdown
-var moment = require('moment');
+var moment = require('moment')
 var momentTz = require('moment-timezone')
 let privateRooms = {}
 
@@ -15,13 +15,13 @@ const {
   scheduledMessages,
 } = require('./constants')
 
-exports.handleScheduledMessages = function (client) {
-  let now = moment();
+exports.handleScheduledMessages = function(client) {
+  let now = moment()
   scheduledMessages.forEach(message => {
     if (message.when.matches(now)) {
-      sendMessage(message.message, "", client, message.room);
+      sendMessage(message.message, '', client, message.room)
     }
-  });
+  })
 }
 
 exports.handleCalendar = function(event, room, toStartOfTimeline, client) {
