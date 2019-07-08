@@ -186,7 +186,7 @@ module.exports.questions = {
         'Social Coding Sync',
       ],
       answer:
-        'The Social Coding Sync is every other week on Tuesday at 05:00PM UTC) right [here](https://meet.jit.si/socialcoding) - see !cal for next meeting date.',
+        'The Social Coding Sync is every other week on Tuesday at 05:00PM UTC right [here](https://meet.jit.si/socialcoding) - see !cal for next meeting date.',
     },
   ],
 
