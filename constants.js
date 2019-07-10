@@ -60,15 +60,97 @@ module.exports.positiveResponses = ['yes', 'yup', 'yea']
 module.exports.negativeResponses = ['no']
 
 module.exports.scheduledMessages = [
+  // CONTRIBUTORS
   {
-    room: '!LkseNfRMMIMEqUHVBW:matrix.org',
-    message: 'Test scheduled message',
+    room: '!OQTaDMKEJXLvTpYoCe:matrix.org',
+    message: '# Hi Contributors!\
+    If you would like cash in hand (well, crypto in wallet) by the end of the month for work you\'ve done, **GET YOUR MILESTONES UP NOW**!\
+    - propose your milestones by the 10th\
+    - pester your campaign mgr to accept them swiftly! 😜\
+    - make sure that some Unicorns ( @geleeroyale , @krrisis , @loie , @danibelle , @griffgreen, @misterboyfriend @planski ) are aware of/amplifying your work. You are always welcome to message us. 🤗\
+    - hit disburse on "My Milestones" as soon as you\'re able\
+    ## If you do all this, then you have the best shot of the funds being in your wallet 5 days after the third Monday of the month.\
+    \
+    Thank you so much for being here 💖Any questions, dm! -Loie',
     when: moment
       .recur()
-      .every('Monday')
-      .daysOfWeek()
-      .every([1, 3])
-      .weeksOfMonthByDay(),
+      .every(7)
+      .daysOfMonth(),
+  },
+
+  {
+    room: '!OQTaDMKEJXLvTpYoCe:matrix.org',
+    message: '# Hi Contributors!\
+    If you would like cash in hand (well, crypto in wallet) by the end of the month for work you\'ve done, **GET YOUR MILESTONES UP NOW**!\
+    - propose your milestones by the 10th\
+    - pester your campaign mgr to accept them swiftly! 😜\
+    - make sure that some Unicorns ( @geleeroyale , @krrisis , @loie , @danibelle , @griffgreen, @misterboyfriend @planski ) are aware of/amplifying your work. You are always welcome to message us. 🤗\
+    - hit disburse on "My Milestones" as soon as you\'re able\
+    ## If you do all this, then you have the best shot of the funds being in your wallet 5 days after the first Monday of next month..\
+    \
+    Thank you so much for being here 💖Any questions, dm! -Loie',
+    when: moment
+      .recur()
+      .every(22)
+      .daysOfMonth(),
+  },
+
+  // UNICORN ROOM
+  {
+    room: '!VUpIHOCgPdHvUrtwXq:matrix.org',
+    message: '# Hi Givethers!\
+    If you would like cash in hand (well, crypto in wallet) by the end of the month for work you\'ve done, **GET YOUR MILESTONES UP NOW**!\
+    - propose your milestones by the 10th\
+    - pester your campaign mgr to accept them swiftly! 😜\
+    - make sure that some Unicorns ( @geleeroyale , @krrisis , @loie , @danibelle , @griffgreen, @misterboyfriend @planski ) are aware of/amplifying your work. You are always welcome to message us. 🤗\
+    - hit disburse on "My Milestones" as soon as you\'re able\
+    ## If you do all this, then you have the best shot of the funds being in your wallet 5 days after the third Monday of the month.\
+    \
+    Thank you so much for being here 💖Any questions, dm! -Loie',
+    when: moment
+      .recur()
+      .every(7)
+      .daysOfMonth(),
+  },
+
+  {
+    room: '!VUpIHOCgPdHvUrtwXq:matrix.org',
+    message: '# Hi Givethers!\
+    If you would like cash in hand (well, crypto in wallet) by the end of the month for work you\'ve done, **GET YOUR MILESTONES UP NOW**!\
+    - propose your milestones by the 10th\
+    - pester your campaign mgr to accept them swiftly! 😜\
+    - make sure that some Unicorns ( @geleeroyale , @krrisis , @loie , @danibelle , @griffgreen, @misterboyfriend @planski ) are aware of/amplifying your work. You are always welcome to message us. 🤗\
+    - hit disburse on "My Milestones" as soon as you\'re able\
+    ## If you do all this, then you have the best shot of the funds being in your wallet 5 days after the first Monday of next month..\
+    \
+    Thank you so much for being here 💖Any questions, dm! -Loie',
+    when: moment
+      .recur()
+      .every(22)
+      .daysOfMonth(),
+  },
+
+  // UNICORN DAC ROOM
+  {
+    room: '!rhEMPQvVgOkuPQtRdq:matrix.org',
+    message: 'The milestones are up! The sheet is ready! # Time to CHOOSE THE MILESTONES you want to fund this round!\
+    As you know, I delegate on the first Monday of the month. So please make sure all your delegations (for any weeks between the third monday of last month and the first one of this month) are \
+    ## in the sheet on Sunday💫🗓 💥',
+    when: moment
+      .recur()
+      .every(10)
+      .daysOfMonth(),
+  },
+  {
+    room: '!rhEMPQvVgOkuPQtRdq:matrix.org',
+    message: 'The milestones are up! The sheet is ready! \
+    # Time to CHOOSE THE MILESTONES you want to fund this round!\
+    As you know, I delegate on the third Monday of the month. So please make sure all your delegations (for weeks between the first monday and third monday of this month) are \
+    ## in the sheet on Sunday💫🗓 💥',
+    when: moment
+      .recur()
+      .every(25)
+      .daysOfMonth(),
   },
 ]
 
