@@ -63,7 +63,8 @@ module.exports.scheduledMessages = [
   // CONTRIBUTORS
   {
     room: '!OQTaDMKEJXLvTpYoCe:matrix.org',
-    message: '# Hi Contributors!\
+    message:
+      '# Hi Contributors!\
     If you would like cash in hand (well, crypto in wallet) by the end of the month for work you\'ve done, **GET YOUR MILESTONES UP NOW**!\
     - propose your milestones by the 10th\
     - pester your campaign mgr to accept them swiftly! 😜\
@@ -80,7 +81,8 @@ module.exports.scheduledMessages = [
 
   {
     room: '!OQTaDMKEJXLvTpYoCe:matrix.org',
-    message: '# Hi Contributors!\
+    message:
+      '# Hi Contributors!\
     If you would like cash in hand (well, crypto in wallet) by the end of the month for work you\'ve done, **GET YOUR MILESTONES UP NOW**!\
     - propose your milestones by the 10th\
     - pester your campaign mgr to accept them swiftly! 😜\
@@ -98,7 +100,8 @@ module.exports.scheduledMessages = [
   // UNICORN ROOM
   {
     room: '!VUpIHOCgPdHvUrtwXq:matrix.org',
-    message: '# Hi Givethers!\
+    message:
+      '# Hi Givethers!\
     If you would like cash in hand (well, crypto in wallet) by the end of the month for work you\'ve done, **GET YOUR MILESTONES UP NOW**!\
     - propose your milestones by the 10th\
     - pester your campaign mgr to accept them swiftly! 😜\
@@ -115,7 +118,8 @@ module.exports.scheduledMessages = [
 
   {
     room: '!VUpIHOCgPdHvUrtwXq:matrix.org',
-    message: '# Hi Givethers!\
+    message:
+      '# Hi Givethers!\
     If you would like cash in hand (well, crypto in wallet) by the end of the month for work you\'ve done, **GET YOUR MILESTONES UP NOW**!\
     - propose your milestones by the 10th\
     - pester your campaign mgr to accept them swiftly! 😜\
@@ -133,7 +137,8 @@ module.exports.scheduledMessages = [
   // UNICORN DAC ROOM
   {
     room: '!rhEMPQvVgOkuPQtRdq:matrix.org',
-    message: 'The milestones are up! The sheet is ready! # Time to CHOOSE THE MILESTONES you want to fund this round!\
+    message:
+      'The milestones are up! The sheet is ready! # Time to CHOOSE THE MILESTONES you want to fund this round!\
     As you know, I delegate on the first Monday of the month. So please make sure all your delegations (for any weeks between the third monday of last month and the first one of this month) are \
     ## in the sheet on Sunday💫🗓 💥',
     when: moment
@@ -143,7 +148,8 @@ module.exports.scheduledMessages = [
   },
   {
     room: '!rhEMPQvVgOkuPQtRdq:matrix.org',
-    message: 'The milestones are up! The sheet is ready! \
+    message:
+      'The milestones are up! The sheet is ready! \
     # Time to CHOOSE THE MILESTONES you want to fund this round!\
     As you know, I delegate on the third Monday of the month. So please make sure all your delegations (for weeks between the first monday and third monday of this month) are \
     ## in the sheet on Sunday💫🗓 💥',
