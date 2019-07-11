@@ -134,9 +134,15 @@ function authenticated(auth) {
 
         client.startClient(0)
 
-        cron.schedule('1 0 * * *', chatBot.handleScheduledMessages(client), {
-          timezone: 'Etc/UTC',
-        })
+        cron.schedule(
+          '1 0 * * *',
+          () => {
+            chatBot.handleScheduledMessages(client)
+          },
+          {
+            timezone: 'Etc/UTC',
+          }
+        )
       }
     )
   })
