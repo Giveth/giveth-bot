@@ -84,7 +84,7 @@ function authenticated(auth) {
     if (err) return console.log('Error loading bot credentials', err)
 
     content = JSON.parse(content)
-    
+
     client.login(
       'm.login.password',
       {
@@ -134,11 +134,9 @@ function authenticated(auth) {
 
         client.startClient(0)
 
-        cron.schedule(
-          '1 0 * * *',
-          chatBot.handleScheduledMessages(client),
-          { timezone: "Etc/UTC" }
-        )
+        cron.schedule('1 0 * * *', chatBot.handleScheduledMessages(client), {
+          timezone: 'Etc/UTC',
+        })
       }
     )
   })
