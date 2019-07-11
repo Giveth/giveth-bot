@@ -4,6 +4,7 @@ const { google } = require('googleapis')
 const sdk = require('matrix-js-sdk')
 const pointsBot = require('./pointsbot.js')
 const chatBot = require('./chatbot.js')
+var cron = require('node-cron')
 let privateRooms = {}
 
 // If modifying these scopes, delete credentials.json.
@@ -132,6 +133,16 @@ function authenticated(auth) {
         })
 
         client.startClient(0)
+
+        cron.schedule(
+          '1 0 * * *',
+          () => {
+            chatBot.handleScheduledMessages(client)
+          },
+          {
+            timezone: 'Etc/UTC',
+          }
+        )
       }
     )
   })
