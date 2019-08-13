@@ -61,7 +61,7 @@ module.exports.negativeResponses = ['no']
 
 module.exports.scheduledMessages = [
   // CONTRIBUTORS
-  {
+  /**{
     room: '!OQTaDMKEJXLvTpYoCe:matrix.org',
     message:
       '# Hi Contributors!\
@@ -95,10 +95,9 @@ module.exports.scheduledMessages = [
       .recur()
       .every(22)
       .daysOfMonth(),
-  },
-
+  },*/
   // UNICORN ROOM
-  {
+  /**{
     room: '!VUpIHOCgPdHvUrtwXq:matrix.org',
     message:
       '# Hi Givethers!\
@@ -132,10 +131,9 @@ module.exports.scheduledMessages = [
       .recur()
       .every(22)
       .daysOfMonth(),
-  },
-
+  },*/
   // UNICORN DAC ROOM
-  {
+  /**{
     room: '!rhEMPQvVgOkuPQtRdq:matrix.org',
     message:
       'The milestones are up! The sheet is ready! # Time to CHOOSE THE MILESTONES you want to fund this round!\
@@ -157,7 +155,7 @@ module.exports.scheduledMessages = [
       .recur()
       .every(25)
       .daysOfMonth(),
-  },
+  },**/
 ]
 
 module.exports.messages = {
